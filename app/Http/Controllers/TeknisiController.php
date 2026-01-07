@@ -6,6 +6,7 @@ use App\Models\Alat;
 use App\Models\Material;
 use App\Models\PeminjamanAlat;
 use App\Models\PengambilanMaterial;
+use App\Models\StockSnapshot;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -19,15 +20,12 @@ class TeknisiController extends Controller
 
         // ========== ALAT STATS ==========
         
-        // Jumlah alat dipinjam kemarin
-        $alatKemarin = PeminjamanAlat::whereDate('tanggal_pinjam', $yesterday)
-            ->where('status', 'dipinjam')
-            ->count();
+        // Total sisa alat kemarin (dari snapshot)
+        $snapshotKemarin = StockSnapshot::whereDate('tanggal', $yesterday)->first();
+        $alatKemarin = $snapshotKemarin ? $snapshotKemarin->total_alat_available : Alat::sum('available');
 
-        // Jumlah alat dipinjam hari ini
-        $alatHariIni = PeminjamanAlat::whereDate('tanggal_pinjam', $today)
-            ->where('status', 'dipinjam')
-            ->count();
+        // Total sisa alat hari ini (real-time)
+        $alatHariIni = Alat::sum('available');
 
         // Detail alat hari ini (yang bertambah/baru dipinjam)
         $alatBaru = PeminjamanAlat::with('alat')
@@ -51,13 +49,11 @@ class TeknisiController extends Controller
 
         // ========== MATERIAL STATS ==========
         
-        // Jumlah material diambil kemarin
-        $materialKemarin = PengambilanMaterial::whereDate('tanggal_ambil', $yesterday)
-            ->sum('jumlah');
+        // Total sisa material kemarin (dari snapshot)
+        $materialKemarin = $snapshotKemarin ? $snapshotKemarin->total_material_stock : Material::sum('stock');
 
-        // Jumlah material diambil hari ini
-        $materialHariIni = PengambilanMaterial::whereDate('tanggal_ambil', $today)
-            ->sum('jumlah');
+        // Total sisa material hari ini (real-time)
+        $materialHariIni = Material::sum('stock');
 
         // Detail material yang baru ditambah (ke stock) hari ini
         $materialBaru = Material::with('category')

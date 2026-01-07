@@ -18,7 +18,7 @@
         <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-blue-100 text-sm font-medium">Tools Dipinjam Kemarin</p>
+                    <p class="text-blue-100 text-sm font-medium">Total Sisa Alat Kemarin</p>
                     <h4 class="text-4xl font-bold mt-2">{{ $alatKemarin }}</h4>
                     <p class="text-blue-100 text-xs mt-1">{{ now()->subDay()->format('d M Y') }}</p>
                 </div>
@@ -30,7 +30,7 @@
         <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-green-100 text-sm font-medium">Tools Dipinjam Hari Ini</p>
+                    <p class="text-green-100 text-sm font-medium">Total Sisa Alat Hari Ini</p>
                     <h4 class="text-4xl font-bold mt-2">{{ $alatHariIni }}</h4>
                     <p class="text-green-100 text-xs mt-1">{{ now()->format('d M Y') }}</p>
                 </div>
@@ -53,8 +53,7 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-gray-50">
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tool</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kode</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Alat</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Peminjam</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Waktu</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -65,9 +64,8 @@
                             @foreach($alatBaru as $item)
                             <tr class="hover:bg-blue-50">
                                 <td class="px-4 py-3 font-medium">{{ $item->alat->name }}</td>
-                                <td class="px-4 py-3"><code class="text-xs">{{ $item->alat->code }}</code></td>
                                 <td class="px-4 py-3">{{ $item->nama_peminjam }}</td>
-                                <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_pinjam->format('H:i') }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_pinjam->format('d M Y H:i') }}</td>
                                 <td class="px-4 py-3">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                         🆕 Baru Dipinjam
@@ -80,9 +78,8 @@
                             @foreach($alatDikembalikan as $item)
                             <tr class="hover:bg-green-50">
                                 <td class="px-4 py-3 font-medium">{{ $item->alat->name }}</td>
-                                <td class="px-4 py-3"><code class="text-xs">{{ $item->alat->code }}</code></td>
                                 <td class="px-4 py-3">{{ $item->nama_peminjam }}</td>
-                                <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_kembali->format('H:i') }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_kembali->format('d M Y H:i') }}</td>
                                 <td class="px-4 py-3">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                         ✅ Dikembalikan
@@ -96,9 +93,8 @@
                                 @if(! $item->tanggal_pinjam->isToday()) {{-- Hanya yang bukan hari ini --}}
                                 <tr class="hover:bg-yellow-50">
                                     <td class="px-4 py-3 font-medium">{{ $item->alat->name }}</td>
-                                    <td class="px-4 py-3"><code class="text-xs">{{ $item->alat->code }}</code></td>
                                     <td class="px-4 py-3">{{ $item->nama_peminjam }}</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_pinjam->format('d M, H:i') }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_pinjam->format('d M Y H:i') }}</td>
                                     <td class="px-4 py-3">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                             ⏳ Belum Dikembalikan
@@ -128,7 +124,7 @@
         <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-purple-100 text-sm font-medium">Perangkat Diambil Kemarin</p>
+                    <p class="text-purple-100 text-sm font-medium">Total Sisa Material Kemarin</p>
                     <h4 class="text-4xl font-bold mt-2">{{ $materialKemarin }}</h4>
                     <p class="text-purple-100 text-xs mt-1">{{ now()->subDay()->format('d M Y') }}</p>
                 </div>
@@ -140,7 +136,7 @@
         <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-orange-100 text-sm font-medium">Perangkat Diambil Hari Ini</p>
+                    <p class="text-orange-100 text-sm font-medium">Total Sisa Material Hari Ini</p>
                     <h4 class="text-4xl font-bold mt-2">{{ $materialHariIni }}</h4>
                     <p class="text-orange-100 text-xs mt-1">{{ now()->format('d M Y') }}</p>
                 </div>
@@ -163,8 +159,7 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-gray-50">
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Perangkat</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kode</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Material</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pengambil</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Waktu</th>
@@ -176,12 +171,11 @@
                             @foreach($materialBaru as $item)
                             <tr class="hover:bg-blue-50">
                                 <td class="px-4 py-3 font-medium">{{ $item->name }}</td>
-                                <td class="px-4 py-3"><code class="text-xs">{{ $item->code }}</code></td>
                                 <td class="px-4 py-3">
                                     <span class="font-semibold text-blue-600">+{{ $item->stock }}</span>
                                 </td>
                                 <td class="px-4 py-3 text-gray-500">-</td>
-                                <td class="px-4 py-3 text-sm text-gray-600">{{ $item->created_at->format('H:i') }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">{{ $item->created_at->format('d M Y H:i') }}</td>
                                 <td class="px-4 py-3">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                         🆕 Baru Ditambahkan
@@ -194,12 +188,11 @@
                             @foreach($materialDiambil as $item)
                             <tr class="hover:bg-orange-50">
                                 <td class="px-4 py-3 font-medium">{{ $item->material->name }}</td>
-                                <td class="px-4 py-3"><code class="text-xs">{{ $item->material->code }}</code></td>
                                 <td class="px-4 py-3">
                                     <span class="font-semibold text-orange-600">-{{ $item->jumlah }}</span>
                                 </td>
                                 <td class="px-4 py-3">{{ $item->nama_pengambil }}</td>
-                                <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_ambil->format('H:i') }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_ambil->format('d M Y H:i') }}</td>
                                 <td class="px-4 py-3">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
                                         📤 Diambil

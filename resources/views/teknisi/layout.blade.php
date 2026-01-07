@@ -59,20 +59,6 @@
                     <span class="text-xl mr-3">📡</span>
                     <span>Material</span>
                 </a>
-
-                <div class="px-6 py-2 text-xs font-semibold text-gray-400 uppercase mt-4">Lainnya</div>
-
-                <a href="{{ route('teknisi.riwayat') }}" 
-                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('teknisi.riwayat') ? 'active' : '' }}">
-                    <span class="text-xl mr-3">📋</span>
-                    <span>Riwayat Saya</span>
-                </a>
-
-                <a href="/admin" 
-                   class="sidebar-link flex items-center px-6 py-3 text-gray-700">
-                    <span class="text-xl mr-3">⚙️</span>
-                    <span>Admin Panel</span>
-                </a>
             </nav>
 
             <!-- Footer Sidebar -->

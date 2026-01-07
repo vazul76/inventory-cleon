@@ -6,7 +6,9 @@ use App\Models\Category;
 use App\Models\Alat;
 use App\Models\Material;
 use App\Models\User;
+use App\Models\StockSnapshot;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -97,12 +99,63 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Buat Material (sample, bisa diedit lewat admin)
-        Material::create([
-            'name' => 'Sample Material',
-            'category_id' => $materialCategory->id,
-            'description' => 'Material contoh, bisa diedit lewat admin',
-            'stock' => 1,
+        // Buat Material
+        $materials = [
+            ['name' => 'Router Mercusys', 'description' => 'Router Mercusys', 'stock' => 0],
+            ['name' => 'Router Totolink', 'description' => 'Router Totolink', 'stock' => 0],
+            ['name' => 'Router Tenda', 'description' => 'Router Tenda', 'stock' => 0],
+            ['name' => 'Radio Bullet', 'description' => 'Radio Bullet', 'stock' => 0],
+            ['name' => 'Radio Rocket', 'description' => 'Radio Rocket', 'stock' => 0],
+            ['name' => 'Radio Litebeam', 'description' => 'Radio Litebeam', 'stock' => 0],
+            ['name' => 'Radio NS M5', 'description' => 'Radio NS M5', 'stock' => 0],
+            ['name' => 'Radio Loco M5', 'description' => 'Radio Loco M5', 'stock' => 0],
+            ['name' => 'Radio Loco M2', 'description' => 'Radio Loco M2', 'stock' => 0],
+            ['name' => 'Radio NS M2', 'description' => 'Radio NS M2', 'stock' => 0],
+            ['name' => 'Radio Pharos', 'description' => 'Radio Pharos', 'stock' => 0],
+            ['name' => 'Radio Tenda o1', 'description' => 'Radio Tenda o1', 'stock' => 0],
+            ['name' => 'Radio Sqxt', 'description' => 'Radio Sqxt', 'stock' => 0],
+            ['name' => 'HTB AB', 'description' => 'HTB AB', 'stock' => 11],
+            ['name' => 'HTB A', 'description' => 'HTB A', 'stock' => 0],
+            ['name' => 'HTB B', 'description' => 'HTB B', 'stock' => 8],
+            ['name' => 'HTB 3', 'description' => 'HTB 3', 'stock' => 1],
+            ['name' => 'HTB 6', 'description' => 'HTB 6', 'stock' => 5],
+            ['name' => 'HTB 6Gbit', 'description' => 'HTB 6Gbit', 'stock' => 0],
+            ['name' => 'HTB 6A', 'description' => 'HTB 6A', 'stock' => 0],
+            ['name' => 'HTB GBit 2', 'description' => 'HTB GBit 2', 'stock' => 0],
+            ['name' => 'HTB GBit AB', 'description' => 'HTB GBit AB', 'stock' => 29],
+            ['name' => 'Switch 5 GBit', 'description' => 'Switch 5 GBit', 'stock' => 0],
+            ['name' => 'Switch 8 GBit', 'description' => 'Switch 8 GBit', 'stock' => 0],
+            ['name' => 'Switch 16 GBit', 'description' => 'Switch 16 GBit', 'stock' => 0],
+            ['name' => 'Switch 24 GBit', 'description' => 'Switch 24 GBit', 'stock' => 0],
+            ['name' => 'Adaptor 24V', 'description' => 'Adaptor 24V', 'stock' => 0],
+            ['name' => 'Adaptor 5v', 'description' => 'Adaptor 5v', 'stock' => 0],
+            ['name' => 'PoE GBit', 'description' => 'PoE GBit', 'stock' => 0],
+            ['name' => 'PoE Biasa', 'description' => 'PoE Biasa', 'stock' => 4],
+            ['name' => 'Kabel Lan Spectra', 'description' => 'Kabel Lan Spectra', 'stock' => 0],
+            ['name' => 'Kabel Lan Vascolink', 'description' => 'Kabel Lan Vascolink', 'stock' => 0],
+            ['name' => 'Kabel Lan Commscope', 'description' => 'Kabel Lan Commscope', 'stock' => 0],
+            ['name' => 'Kabel Lan Belden', 'description' => 'Kabel Lan Belden', 'stock' => 0],
+            ['name' => 'Dropcore Infinity', 'description' => 'Dropcore Infinity', 'stock' => 0],
+            ['name' => 'Fastcont', 'description' => 'Fastcont', 'stock' => 0],
+        ];
+
+        foreach ($materials as $material) {
+            Material::create([
+                'name' => $material['name'],
+                'category_id' => $materialCategory->id,
+                'description' => $material['description'],
+                'stock' => $material['stock'],
+            ]);
+        }
+
+        // Buat snapshot untuk kemarin (agar dashboard bisa tampil beda)
+        $totalAlatAvailable = Alat::sum('available');
+        $totalMaterialStock = Material::sum('stock');
+        
+        StockSnapshot::create([
+            'tanggal' => Carbon::yesterday(),
+            'total_alat_available' => $totalAlatAvailable,
+            'total_material_stock' => $totalMaterialStock,
         ]);
     }
 }
