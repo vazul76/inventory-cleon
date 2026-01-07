@@ -43,13 +43,13 @@
                 <a href="{{ route('teknisi.alat') }}" 
                    class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('teknisi.alat') ? 'active' : '' }}">
                     <span class="text-xl mr-3">🔧</span>
-                    <span>Pinjam Alat</span>
+                    <span>Alat</span>
                 </a>
 
                 <a href="{{ route('teknisi.pengembalian') }}" 
                    class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('teknisi.pengembalian') ? 'active' : '' }}">
                     <span class="text-xl mr-3">↩️</span>
-                    <span>Kembalikan Alat</span>
+                    <span>Pengembalian</span>
                 </a>
 
                 <div class="px-6 py-2 text-xs font-semibold text-gray-400 uppercase mt-4">Material</div>
@@ -57,7 +57,7 @@
                 <a href="{{ route('teknisi.material') }}" 
                    class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('teknisi.material') ? 'active' : '' }}">
                     <span class="text-xl mr-3">📡</span>
-                    <span>Ambil Material</span>
+                    <span>Material</span>
                 </a>
 
                 <div class="px-6 py-2 text-xs font-semibold text-gray-400 uppercase mt-4">Lainnya</div>

@@ -90,7 +90,7 @@ class TeknisiController extends Controller
     public function alat()
     {
         $alats = Alat::with('category')
-            ->where('available', '>', 0)
+            ->orderBy('name', 'asc')
             ->get();
         
         return view('teknisi.alat', compact('alats'));
@@ -100,30 +100,41 @@ class TeknisiController extends Controller
     public function pinjamAlat(Request $request)
     {
         $request->validate([
-            'alat_id' => 'required|exists:alats,id',
-            'jumlah' => 'required|integer|min:1',
             'nama_peminjam' => 'required|string|max:255',
             'keterangan' => 'nullable|string',
+            'alats' => 'required|json',
         ]);
 
-        $alat = Alat::findOrFail($request->alat_id);
-
-        if (!$alat->isAvailable($request->jumlah)) {
-            return back()->with('error', 'Alat tidak cukup! Tersedia: ' . $alat->available);
+        $alats = json_decode($request->alats, true);
+        
+        if (empty($alats)) {
+            return back()->with('error', 'Tidak ada alat yang dipilih!');
         }
 
-        PeminjamanAlat::create([
-            'alat_id' => $alat->id,
-            'jumlah' => $request->jumlah,
-            'nama_peminjam' => $request->nama_peminjam,
-            'tanggal_pinjam' => now(),
-            'status' => 'dipinjam',
-            'keterangan' => $request->keterangan,
-        ]);
+        foreach ($alats as $alatData) {
+            $alat = Alat::findOrFail($alatData['id']);
+            $jumlah = $alatData['jumlah'];
 
-        $alat->kurangiAvailable($request->jumlah);
+            if (!$alat->isAvailable($jumlah)) {
+                return back()->with('error', "Alat {$alat->name} tidak cukup! Tersedia: {$alat->available}");
+            }
 
-        return back()->with('success', 'Alat berhasil dipinjam!');
+            PeminjamanAlat::create([
+                'alat_id' => $alat->id,
+                'jumlah' => $jumlah,
+                'nama_peminjam' => $request->nama_peminjam,
+                'tanggal_pinjam' => now(),
+                'status' => 'dipinjam',
+                'keterangan' => $request->keterangan,
+            ]);
+
+            $alat->kurangiAvailable($jumlah);
+        }
+
+        $count = count($alats);
+        $message = $count === 1 ? 'Alat berhasil dipinjam!' : "{$count} alat berhasil dipinjam!";
+        
+        return back()->with('success', $message);
     }
 
     // Halaman Kembalikan Alat
@@ -156,13 +167,43 @@ class TeknisiController extends Controller
         return back()->with('success', 'Alat berhasil dikembalikan!');
     }
 
+    // Proses Kembalikan Multiple Alat
+    public function kembalikanMultipleAlat(Request $request)
+    {
+        $request->validate([
+            'peminjaman_ids' => 'required|json',
+        ]);
+
+        $ids = json_decode($request->peminjaman_ids, true);
+        
+        if (empty($ids)) {
+            return back()->with('error', 'Tidak ada alat yang dipilih!');
+        }
+
+        foreach ($ids as $id) {
+            $peminjaman = PeminjamanAlat::findOrFail($id);
+            
+            $peminjaman->update([
+                'status' => 'dikembalikan',
+                'tanggal_kembali' => now(),
+            ]);
+            
+            $peminjaman->alat->tambahAvailable($peminjaman->jumlah);
+        }
+
+        $count = count($ids);
+        $message = $count === 1 ? 'Alat berhasil dikembalikan!' : "{$count} alat berhasil dikembalikan!";
+        
+        return back()->with('success', $message);
+    }
+
     // ========== MATERIAL ==========
     
     // Halaman Lihat Material
     public function material()
     {
         $material = Material::with('category')
-            ->where('stock', '>', 0)
+            ->orderBy('name', 'asc')
             ->get();
 
         return view('teknisi.material', compact('material'));
@@ -172,31 +213,42 @@ class TeknisiController extends Controller
     public function ambilMaterial(Request $request)
     {
         $request->validate([
-            'material_id' => 'required|exists:materials,id',
             'nama_pengambil' => 'required|string|max:255',
-            'jumlah' => 'required|integer|min:1',
             'keperluan' => 'nullable|string',
             'lokasi_pemasangan' => 'nullable|string',
+            'materials' => 'required|json',
         ]);
 
-        $material = Material::findOrFail($request->material_id);
-
-        if ($material->stock < $request->jumlah) {
-            return back()->with('error', 'Stock tidak cukup! Tersedia: ' . $material->stock);
+        $materials = json_decode($request->materials, true);
+        
+        if (empty($materials)) {
+            return back()->with('error', 'Tidak ada material yang dipilih!');
         }
 
-        PengambilanMaterial::create([
-            'material_id' => $material->id,
-            'nama_pengambil' => $request->nama_pengambil,
-            'jumlah' => $request->jumlah,
-            'tanggal_ambil' => now(),
-            'keperluan' => $request->keperluan,
-            'lokasi_pemasangan' => $request->lokasi_pemasangan,
-        ]);
+        foreach ($materials as $materialData) {
+            $material = Material::findOrFail($materialData['id']);
+            $jumlah = $materialData['jumlah'];
 
-        $material->kurangiStock($request->jumlah);
+            if ($material->stock < $jumlah) {
+                return back()->with('error', "Material {$material->name} tidak cukup! Stock: {$material->stock}");
+            }
 
-        return back()->with('success', 'Material berhasil diambil!');
+            PengambilanMaterial::create([
+                'material_id' => $material->id,
+                'jumlah' => $jumlah,
+                'nama_pengambil' => $request->nama_pengambil,
+                'tanggal_ambil' => now(),
+                'keperluan' => $request->keperluan,
+                'lokasi_pemasangan' => $request->lokasi_pemasangan,
+            ]);
+
+            $material->kurangiStock($jumlah);
+        }
+
+        $count = count($materials);
+        $message = $count === 1 ? 'Material berhasil diambil!' : "{$count} material berhasil diambil!";
+        
+        return back()->with('success', $message);
     }
 
     // Halaman Riwayat Saya

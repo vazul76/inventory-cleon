@@ -18,6 +18,7 @@ Route::prefix('teknisi')->name('teknisi.')->group(function () {
     // Pengembalian
     Route::get('/pengembalian', [TeknisiController::class, 'pengembalian'])->name('pengembalian');
     Route::post('/pengembalian/{id}', [TeknisiController::class, 'kembalikanAlat'])->name('pengembalian.kembali');
+    Route::post('/pengembalian-multiple', [TeknisiController::class, 'kembalikanMultipleAlat'])->name('pengembalian.kembali.multiple');
     
     // Material
     Route::get('/material', [TeknisiController::class, 'material'])->name('material');
