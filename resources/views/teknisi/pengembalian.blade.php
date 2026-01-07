@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set form action for multiple or single
         const ids = items.map(i => i.id);
-        const baseUrl = "{{ url('teknisi/pengembalian') }}";
+        const baseUrl = "{{ url('/pengembalian') }}";
         const multipleUrl = "{{ route('teknisi.pengembalian.kembali.multiple') }}";
         
         if (ids.length === 1) {

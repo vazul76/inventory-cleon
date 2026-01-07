@@ -18,7 +18,7 @@
             <button id="btn-ambil-multiple" 
                     class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
                     disabled>
-                Ambil Material Terpilih
+                Ambil Material
             </button>
         </div>
 

@@ -30,22 +30,40 @@ class TeknisiController extends Controller
         // Detail alat hari ini (yang bertambah/baru dipinjam)
         $alatBaru = PeminjamanAlat::with('alat')
             ->whereDate('tanggal_pinjam', $today)
-            ->latest()
             ->get();
 
         // Alat yang dikembalikan hari ini
         $alatDikembalikan = PeminjamanAlat::with('alat')
             ->whereDate('tanggal_kembali', $today)
             ->where('status', 'dikembalikan')
-            ->latest()
             ->get();
 
-        // Alat yang masih dipinjam (belum dikembalikan)
+        // Alat yang masih dipinjam (belum dikembalikan) - dari hari sebelumnya
         $alatBelumKembali = PeminjamanAlat::with('alat')
             ->where('status', 'dipinjam')
-            ->latest()
+            ->whereDate('tanggal_pinjam', '<', $today)
             ->take(10)
             ->get();
+
+        // Gabungkan semua aktivitas hari ini dan sort berdasarkan waktu terbaru
+        $allAlatActivities = collect()
+            ->merge($alatBaru->map(function($item) {
+                $item->activity_type = 'baru_dipinjam';
+                $item->activity_time = $item->tanggal_pinjam;
+                return $item;
+            }))
+            ->merge($alatDikembalikan->map(function($item) {
+                $item->activity_type = 'dikembalikan';
+                $item->activity_time = $item->updated_at;
+                return $item;
+            }))
+            ->merge($alatBelumKembali->map(function($item) {
+                $item->activity_type = 'belum_kembali';
+                $item->activity_time = $item->tanggal_pinjam;
+                return $item;
+            }))
+            ->sortByDesc('activity_time')
+            ->values();
 
         // ========== MATERIAL STATS ==========
         
@@ -58,25 +76,35 @@ class TeknisiController extends Controller
         // Detail material yang baru ditambah (ke stock) hari ini
         $materialBaru = Material::with('category')
             ->whereDate('created_at', $today)
-            ->latest()
             ->get();
 
         // Detail material yang diambil hari ini
         $materialDiambil = PengambilanMaterial::with('material')
             ->whereDate('tanggal_ambil', $today)
-            ->latest()
             ->get();
+
+        // Gabungkan semua aktivitas material hari ini dan sort berdasarkan waktu terbaru
+        $allMaterialActivities = collect()
+            ->merge($materialBaru->map(function($item) {
+                $item->activity_type = 'baru_ditambah';
+                $item->activity_time = $item->created_at;
+                return $item;
+            }))
+            ->merge($materialDiambil->map(function($item) {
+                $item->activity_type = 'diambil';
+                $item->activity_time = $item->created_at;
+                return $item;
+            }))
+            ->sortByDesc('activity_time')
+            ->values();
 
         return view('teknisi.dashboard', compact(
             'alatKemarin',
             'alatHariIni',
-            'alatBaru',
-            'alatDikembalikan',
-            'alatBelumKembali',
+            'allAlatActivities',
             'materialKemarin',
             'materialHariIni',
-            'materialBaru',
-            'materialDiambil'
+            'allMaterialActivities'
         ));
     }
 
@@ -138,7 +166,8 @@ class TeknisiController extends Controller
     {
         $peminjaman = PeminjamanAlat::with('alat')
             ->where('status', 'dipinjam')
-            ->latest()
+            ->orderBy('tanggal_pinjam', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         return view('teknisi.pengembalian', compact('peminjaman'));
@@ -160,7 +189,7 @@ class TeknisiController extends Controller
 
         $peminjaman->alat->tambahAvailable($peminjaman->jumlah);
 
-        return back()->with('success', 'Alat berhasil dikembalikan!');
+        return redirect()->route('teknisi.pengembalian')->with('success', 'Alat berhasil dikembalikan!');
     }
 
     // Proses Kembalikan Multiple Alat
@@ -190,7 +219,7 @@ class TeknisiController extends Controller
         $count = count($ids);
         $message = $count === 1 ? 'Alat berhasil dikembalikan!' : "{$count} alat berhasil dikembalikan!";
         
-        return back()->with('success', $message);
+        return redirect()->route('teknisi.pengembalian')->with('success', $message);
     }
 
     // ========== MATERIAL ==========

@@ -18,7 +18,7 @@
             <button id="btn-pinjam-multiple" 
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
                     disabled>
-                Pinjam Alat Terpilih
+                Pinjam Alat
             </button>
         </div>
 
