@@ -78,11 +78,11 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-gray-50">
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Alat</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Peminjam</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Waktu</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/4">Alat</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-20">Jumlah</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5">Peminjam</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5">Waktu</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-32">Status</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -122,11 +122,11 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-gray-50">
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Material</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pengambil</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Waktu</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/4">Material</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-20">Jumlah</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5">Pengambil</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5">Waktu</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-32">Status</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -134,7 +134,7 @@
                                 <tr class="hover:bg-orange-50">
                                     <td class="px-4 py-3 font-medium">{{ $item->material->name }}</td>
                                     <td class="px-4 py-3">
-                                        <span class="font-semibold text-orange-600">{{ $item->jumlah }}</span>
+                                        <span class="font-semibold text-blue-600">{{ $item->jumlah }}</span>
                                     </td>
                                     <td class="px-4 py-3">{{ $item->nama_pengambil }}</td>
                                     <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_ambil->format('d M Y H:i') }}</td>
