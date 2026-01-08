@@ -1,4 +1,4 @@
-@extends('teknisi.layout')
+@extends('peminjam.layout')
 @section('page-title', 'Alat')
 
 @section('content')
@@ -90,7 +90,7 @@
             <button id="close-modal" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
         </div>
         
-        <form id="form-pinjam" action="{{ route('teknisi.alat.pinjam') }}" method="POST">
+        <form id="form-pinjam" action="{{ route('peminjam.alat.pinjam') }}" method="POST">
             @csrf
             <input type="hidden" id="selected-alats-input" name="alats" value="">
             

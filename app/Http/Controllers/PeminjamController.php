@@ -10,9 +10,9 @@ use App\Models\StockSnapshot;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-class TeknisiController extends Controller
+class PeminjamController extends Controller
 {
-    // Halaman Dashboard Teknisi
+    // Halaman Dashboard Peminjam
     public function index()
     {
         $today = Carbon::today();
@@ -98,7 +98,7 @@ class TeknisiController extends Controller
             ->sortByDesc('activity_time')
             ->values();
 
-        return view('teknisi.dashboard', compact(
+        return view('peminjam.dashboard', compact(
             'alatKemarin',
             'alatHariIni',
             'allAlatActivities',
@@ -117,7 +117,7 @@ class TeknisiController extends Controller
             ->orderBy('name', 'asc')
             ->get();
         
-        return view('teknisi.alat', compact('alats'));
+        return view('peminjam.alat', compact('alats'));
     }
 
     // Proses Pinjam Alat
@@ -162,7 +162,7 @@ class TeknisiController extends Controller
     }
 
     // Halaman Kembalikan Alat
-    public function pengembalian()
+    public function pengembalianAlat()
     {
         $peminjaman = PeminjamanAlat::with('alat')
             ->where('status', 'dipinjam')
@@ -170,7 +170,7 @@ class TeknisiController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
-        return view('teknisi.pengembalian', compact('peminjaman'));
+        return view('peminjam.pengembalian-alat', compact('peminjaman'));
     }
 
     // Proses Kembalikan Alat
@@ -189,7 +189,7 @@ class TeknisiController extends Controller
 
         $peminjaman->alat->tambahAvailable($peminjaman->jumlah);
 
-        return redirect()->route('teknisi.pengembalian')->with('success', 'Alat berhasil dikembalikan!');
+        return redirect()->route('peminjam.pengembalian-alat')->with('success', 'Alat berhasil dikembalikan!');
     }
 
     // Proses Kembalikan Multiple Alat
@@ -219,7 +219,7 @@ class TeknisiController extends Controller
         $count = count($ids);
         $message = $count === 1 ? 'Alat berhasil dikembalikan!' : "{$count} alat berhasil dikembalikan!";
         
-        return redirect()->route('teknisi.pengembalian')->with('success', $message);
+        return redirect()->route('peminjam.pengembalian-alat')->with('success', $message);
     }
 
     // ========== MATERIAL ==========
@@ -231,7 +231,7 @@ class TeknisiController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
-        return view('teknisi.material', compact('material'));
+        return view('peminjam.material', compact('material'));
     }
 
     // Proses Ambil Material
@@ -240,7 +240,6 @@ class TeknisiController extends Controller
         $request->validate([
             'nama_pengambil' => 'required|string|max:255',
             'keperluan' => 'nullable|string',
-            'lokasi_pemasangan' => 'nullable|string',
             'materials' => 'required|json',
         ]);
 
@@ -264,7 +263,7 @@ class TeknisiController extends Controller
                 'nama_pengambil' => $request->nama_pengambil,
                 'tanggal_ambil' => now(),
                 'keperluan' => $request->keperluan,
-                'lokasi_pemasangan' => $request->lokasi_pemasangan,
+                'status' => 'diambil',
             ]);
 
             $material->kurangiStock($jumlah);
@@ -274,6 +273,123 @@ class TeknisiController extends Controller
         $message = $count === 1 ? 'Material berhasil diambil!' : "{$count} material berhasil diambil!";
         
         return back()->with('success', $message);
+    }
+
+    // Halaman Pengembalian Material
+    public function pengembalianMaterial()
+    {
+        $pengambilan = PengambilanMaterial::with('material')
+            ->where('status', 'diambil')
+            ->orderBy('tanggal_ambil', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('peminjam.pengembalian-material', compact('pengambilan'));
+    }
+
+    // Proses Kembalikan Material
+    public function kembalikanMaterial(Request $request, $id)
+    {
+        $request->validate([
+            'jumlah_kembali' => 'required|integer|min:1',
+        ]);
+
+        $pengambilan = PengambilanMaterial::findOrFail($id);
+
+        if ($pengambilan->status !== 'diambil') {
+            return back()->with('error', 'Material sudah dikembalikan!');
+        }
+
+        $jumlahKembali = $request->jumlah_kembali;
+
+        if ($jumlahKembali > $pengambilan->jumlah) {
+            return back()->with('error', 'Jumlah pengembalian melebihi jumlah yang diambil!');
+        }
+
+        // Jika dikembalikan semua
+        if ($jumlahKembali == $pengambilan->jumlah) {
+            $pengambilan->update([
+                'status' => 'dikembalikan',
+                'tanggal_kembali' => now(),
+            ]);
+            $pengambilan->material->tambahStock($jumlahKembali);
+        } else {
+            // Jika dikembalikan sebagian, update jumlah yang masih diambil
+            $pengambilan->update([
+                'jumlah' => $pengambilan->jumlah - $jumlahKembali,
+            ]);
+            
+            // Buat record baru untuk yang dikembalikan
+            PengambilanMaterial::create([
+                'material_id' => $pengambilan->material_id,
+                'nama_pengambil' => $pengambilan->nama_pengambil,
+                'jumlah' => $jumlahKembali,
+                'tanggal_ambil' => $pengambilan->tanggal_ambil,
+                'tanggal_kembali' => now(),
+                'status' => 'dikembalikan',
+                'keperluan' => $pengambilan->keperluan,
+            ]);
+            
+            $pengambilan->material->tambahStock($jumlahKembali);
+        }
+
+        return redirect()->route('peminjam.pengembalian-material')->with('success', "Berhasil mengembalikan {$jumlahKembali} unit material!");
+    }
+
+    // Proses Kembalikan Multiple Material
+    public function kembalikanMultipleMaterial(Request $request)
+    {
+        $request->validate([
+            'items' => 'required|json',
+        ]);
+
+        $items = json_decode($request->items, true);
+        
+        if (empty($items)) {
+            return back()->with('error', 'Tidak ada material yang dipilih!');
+        }
+
+        $totalKembali = 0;
+        foreach ($items as $item) {
+            $pengambilan = PengambilanMaterial::findOrFail($item['id']);
+            $jumlahKembali = $item['jumlah_kembali'];
+
+            if ($jumlahKembali > $pengambilan->jumlah) {
+                return back()->with('error', "Jumlah pengembalian {$pengambilan->material->name} melebihi jumlah yang diambil!");
+            }
+            
+            // Jika dikembalikan semua
+            if ($jumlahKembali == $pengambilan->jumlah) {
+                $pengambilan->update([
+                    'status' => 'dikembalikan',
+                    'tanggal_kembali' => now(),
+                ]);
+            } else {
+                // Jika dikembalikan sebagian
+                $pengambilan->update([
+                    'jumlah' => $pengambilan->jumlah - $jumlahKembali,
+                ]);
+                
+                // Buat record baru untuk yang dikembalikan
+                PengambilanMaterial::create([
+                    'material_id' => $pengambilan->material_id,
+                    'nama_pengambil' => $pengambilan->nama_pengambil,
+                    'jumlah' => $jumlahKembali,
+                    'tanggal_ambil' => $pengambilan->tanggal_ambil,
+                    'tanggal_kembali' => now(),
+                    'status' => 'dikembalikan',
+                    'keperluan' => $pengambilan->keperluan,
+                ]);
+            }
+            
+            $pengambilan->material->tambahStock($jumlahKembali);
+            $totalKembali += $jumlahKembali;
+        }
+
+        $count = count($items);
+        $message = "{$totalKembali} unit material dari {$count} item berhasil dikembalikan!";
+        
+        return redirect()->route('peminjam.pengembalian-material')->with('success', $message);
     }
 
     // Halaman Riwayat Saya
@@ -296,6 +412,6 @@ class TeknisiController extends Controller
                 ->get();
         }
 
-        return view('teknisi.riwayat', compact('riwayatAlat', 'riwayatMaterial', 'nama'));
+        return view('peminjam.riwayat', compact('riwayatAlat', 'riwayatMaterial', 'nama'));
     }
 }

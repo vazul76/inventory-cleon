@@ -1,4 +1,4 @@
-@extends('teknisi.layout')
+@extends('peminjam.layout')
 
 @section('page-title', 'Dashboard')
 

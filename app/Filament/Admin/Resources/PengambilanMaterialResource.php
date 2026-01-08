@@ -45,9 +45,6 @@ class PengambilanMaterialResource extends Resource
                 Forms\Components\Textarea::make('keperluan')
                     ->label('Keperluan')
                     ->rows(2),
-                Forms\Components\Textarea::make('lokasi_pemasangan')
-                    ->label('Lokasi Pemasangan')
-                    ->rows(2),
             ]);
     }
 
@@ -70,9 +67,12 @@ class PengambilanMaterialResource extends Resource
                     ->label('Tanggal Ambil')
                     ->dateTime('d M Y H:i')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('lokasi_pemasangan')
-                    ->label('Lokasi')
-                    ->limit(30),
+                Tables\Columns\TextColumn::make('tanggal_kembali')
+                    ->label('Tanggal Kembali')
+                    ->dateTime('d M Y H:i')
+                    ->sortable()
+                    ->placeholder('-')
+                    ->toggleable(),
             ])
             ->defaultSort('tanggal_ambil', 'desc')
             ->filters([])

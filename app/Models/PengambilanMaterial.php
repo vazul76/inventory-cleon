@@ -15,11 +15,13 @@ class PengambilanMaterial extends Model
         'jumlah',
         'tanggal_ambil',
         'keperluan',
-        'lokasi_pemasangan',
+        'status',
+        'tanggal_kembali',
     ];
 
     protected $casts = [
         'tanggal_ambil' => 'datetime',
+        'tanggal_kembali' => 'datetime',
     ];
 
     public function material()

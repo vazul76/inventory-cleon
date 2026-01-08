@@ -1,4 +1,4 @@
-@extends('teknisi.layout')
+@extends('peminjam.layout')
 @section('page-title', 'Pengembalian')
 
 @section('content')
@@ -215,8 +215,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set form action for multiple or single
         const ids = items.map(i => i.id);
-        const baseUrl = "{{ url('/pengembalian') }}";
-        const multipleUrl = "{{ route('teknisi.pengembalian.kembali.multiple') }}";
+        const baseUrl = "{{ url('/pengembalian-alat') }}";
+        const multipleUrl = "{{ route('peminjam.pengembalian-alat.kembali.multiple') }}";
         
         if (ids.length === 1) {
             formKembalikan.action = baseUrl + "/" + ids[0];

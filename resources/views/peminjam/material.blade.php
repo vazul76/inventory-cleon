@@ -1,4 +1,4 @@
-@extends('teknisi.layout')
+@extends('peminjam.layout')
 @section('page-title', 'Material')
 
 @section('content')
@@ -90,7 +90,7 @@
             <button id="close-modal" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
         </div>
         
-        <form id="form-ambil" action="{{ route('teknisi.material.ambil') }}" method="POST">
+        <form id="form-ambil" action="{{ route('peminjam.material.ambil') }}" method="POST">
             @csrf
             <input type="hidden" id="selected-materials-input" name="materials" value="">
             
@@ -106,13 +106,6 @@
                 <input type="text" name="keperluan" 
                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
                        placeholder="Misal: Pemasangan baru">
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Lokasi Pemasangan</label>
-                <input type="text" name="lokasi_pemasangan" 
-                       class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-                       placeholder="Misal: Jl. Merdeka No.123">
             </div>
 
             <div class="mb-4">

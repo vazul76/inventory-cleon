@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Inventory System - Teknisi')</title>
+    <title>@yield('title', 'Inventory System - Peminjam')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
@@ -15,7 +15,7 @@
         /* Mobile: hidden by default */
         @media (max-width: 767px) {
             .sidebar {
-                width: 16rem;
+                width: 18rem;
                 transform: translateX(-100%);
             }
             .sidebar.open {
@@ -30,7 +30,7 @@
                 transform: translateX(0) !important;
             }
             .sidebar:hover {
-                width: 16rem;
+                width: 18rem;
             }
         }
         
@@ -172,28 +172,34 @@
 
             <!-- Navigation Menu -->
             <nav class="mt-4">
-                <a href="{{ route('teknisi.dashboard') }}" 
-                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('teknisi.dashboard') ? 'active' : '' }}">
+                <a href="{{ route('peminjam.dashboard') }}" 
+                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('peminjam.dashboard') ? 'active' : '' }}">
                     <span class="sidebar-icon text-lg"><i class="fas fa-home"></i></span>
                     <span class="sidebar-text">Dashboard</span>
                 </a>
                 
-                <a href="{{ route('teknisi.alat') }}" 
-                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('teknisi.alat') ? 'active' : '' }}">
+                <a href="{{ route('peminjam.alat') }}" 
+                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('peminjam.alat') ? 'active' : '' }}">
                     <span class="sidebar-icon text-lg"><i class="fas fa-tools"></i></span>
                     <span class="sidebar-text">Alat</span>
                 </a>
 
-                <a href="{{ route('teknisi.pengembalian') }}" 
-                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('teknisi.pengembalian') ? 'active' : '' }}">
-                    <span class="sidebar-icon text-lg"><i class="fas fa-undo"></i></span>
-                    <span class="sidebar-text">Pengembalian</span>
+                <a href="{{ route('peminjam.pengembalian-alat') }}" 
+                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('peminjam.pengembalian-alat') ? 'active' : '' }}">
+                    <span class="sidebar-icon text-lg"><i class="fas fa-toolbox"></i></span>
+                    <span class="sidebar-text">Pengembalian Alat</span>
                 </a>
 
-                <a href="{{ route('teknisi.material') }}" 
-                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('teknisi.material') ? 'active' : '' }}">
+                <a href="{{ route('peminjam.material') }}" 
+                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('peminjam.material') ? 'active' : '' }}">
                     <span class="sidebar-icon text-lg"><i class="fas fa-cube"></i></span>
                     <span class="sidebar-text">Material</span>
+                </a>
+
+                <a href="{{ route('peminjam.pengembalian-material') }}" 
+                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('peminjam.pengembalian-material') ? 'active' : '' }}">
+                    <span class="sidebar-icon text-lg"><i class="fas fa-box-open"></i></span>
+                    <span class="sidebar-text">Pengembalian Material</span>
                 </a>
             </nav>
 

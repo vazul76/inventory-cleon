@@ -1,11 +1,11 @@
-@extends('teknisi.layout')
+@extends('peminjam.layout')
 
 @section('page-title', 'Riwayat Saya')
 @section('content')
 
 <!-- Form Pencarian -->
 <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-    <form action="{{ route('teknisi.riwayat') }}" method="GET" class="flex gap-4">
+    <form action="{{ route('peminjam.riwayat') }}" method="GET" class="flex gap-4">
         <input type="text" name="nama" value="{{ $nama }}" required
                class="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                placeholder="Masukkan nama tim (misal: Tim 1)">
