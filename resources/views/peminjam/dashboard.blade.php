@@ -21,7 +21,7 @@
                     <h4 class="text-4xl font-bold mt-2">{{ $alatKemarin }}</h4>
                     <p class="text-blue-100 text-xs mt-1">{{ now()->subDay()->format('d M Y') }}</p>
                 </div>
-                <i class="fas fa-chart-bar text-6xl opacity-20"></i>
+                <i class="fas fa-tools text-6xl opacity-20"></i>
             </div>
         </div>
 
@@ -33,7 +33,7 @@
                     <h4 class="text-4xl font-bold mt-2">{{ $alatHariIni }}</h4>
                     <p class="text-green-100 text-xs mt-1">{{ now()->format('d M Y') }}</p>
                 </div>
-                <i class="fas fa-chart-line text-6xl opacity-20"></i>
+                <i class="fas fa-tools text-6xl opacity-20"></i>
             </div>
         </div>
     </div>
@@ -47,7 +47,7 @@
                     <h4 class="text-4xl font-bold mt-2">{{ $materialKemarin }}</h4>
                     <p class="text-purple-100 text-xs mt-1">{{ now()->subDay()->format('d M Y') }}</p>
                 </div>
-                <i class="fas fa-chart-bar text-6xl opacity-20"></i>
+                <i class="fas fa-cube text-6xl opacity-20"></i>
             </div>
         </div>
 
@@ -59,13 +59,13 @@
                     <h4 class="text-4xl font-bold mt-2">{{ $materialHariIni }}</h4>
                     <p class="text-orange-100 text-xs mt-1">{{ now()->format('d M Y') }}</p>
                 </div>
-                <i class="fas fa-chart-line text-6xl opacity-20"></i>
+                <i class="fas fa-cube text-6xl opacity-20"></i>
             </div>
         </div>
     </div>
 
     <!-- Detail Tools -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="bg-white rounded-lg my-6 shadow-md overflow-hidden">
         <div class="px-6 py-4 bg-gray-50 border-b">
             <h4 class="font-bold text-gray-800">Detail Update Alat Hari Ini</h4>
         </div>
@@ -86,7 +86,6 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             @foreach($allAlatActivities as $item)
-                                @if($item->activity_type === 'baru_dipinjam')
                                 <tr class="hover:bg-blue-50">
                                     <td class="px-4 py-3 font-medium">{{ $item->alat->name }}</td>
                                     <td class="px-4 py-3">{{ $item->nama_peminjam }}</td>
@@ -97,29 +96,6 @@
                                         </span>
                                     </td>
                                 </tr>
-                                @elseif($item->activity_type === 'dikembalikan')
-                                <tr class="hover:bg-green-50">
-                                    <td class="px-4 py-3 font-medium">{{ $item->alat->name }}</td>
-                                    <td class="px-4 py-3">{{ $item->nama_peminjam }}</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_kembali->format('d M Y H:i') }}</td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            <i class="fas fa-check-circle mr-1"></i> Dikembalikan
-                                        </span>
-                                    </td>
-                                </tr>
-                                @elseif($item->activity_type === 'belum_kembali')
-                                <tr class="hover:bg-yellow-50">
-                                    <td class="px-4 py-3 font-medium">{{ $item->alat->name }}</td>
-                                    <td class="px-4 py-3">{{ $item->nama_peminjam }}</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_pinjam->format('d M Y H:i') }}</td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                            <i class="fas fa-clock mr-1"></i> Belum Dikembalikan
-                                        </span>
-                                    </td>
-                                </tr>
-                                @endif
                             @endforeach
                         </tbody>
                     </table>
@@ -129,7 +105,7 @@
     </div>
 
         <!-- Detail Perangkat -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="bg-white rounded-lg shadow-md my-6 overflow-hidden">
         <div class="px-6 py-4 bg-gray-50 border-b">
             <h4 class="font-bold text-gray-800">Detail Update Material Hari Ini</h4>
         </div>
@@ -151,21 +127,6 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             @foreach($allMaterialActivities as $item)
-                                @if($item->activity_type === 'baru_ditambah')
-                                <tr class="hover:bg-blue-50">
-                                    <td class="px-4 py-3 font-medium">{{ $item->name }}</td>
-                                    <td class="px-4 py-3">
-                                        <span class="font-semibold text-blue-600">+{{ $item->stock }}</span>
-                                    </td>
-                                    <td class="px-4 py-3 text-gray-500">-</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">{{ $item->created_at->format('d M Y H:i') }}</td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            <i class="fas fa-plus-circle mr-1"></i> Baru Ditambahkan
-                                        </span>
-                                    </td>
-                                </tr>
-                                @elseif($item->activity_type === 'diambil')
                                 <tr class="hover:bg-orange-50">
                                     <td class="px-4 py-3 font-medium">{{ $item->material->name }}</td>
                                     <td class="px-4 py-3">
@@ -179,7 +140,6 @@
                                         </span>
                                     </td>
                                 </tr>
-                                @endif
                             @endforeach
                         </tbody>
                     </table>

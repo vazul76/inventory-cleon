@@ -27,41 +27,17 @@ class PeminjamController extends Controller
         // Total sisa alat hari ini (real-time)
         $alatHariIni = Alat::sum('available');
 
-        // Detail alat hari ini (yang bertambah/baru dipinjam)
+        // Detail alat hari ini (hanya yang dipinjam)
         $alatBaru = PeminjamanAlat::with('alat')
             ->whereDate('tanggal_pinjam', $today)
             ->get();
 
-        // Alat yang dikembalikan hari ini
-        $alatDikembalikan = PeminjamanAlat::with('alat')
-            ->whereDate('tanggal_kembali', $today)
-            ->where('status', 'dikembalikan')
-            ->get();
-
-        // Alat yang masih dipinjam (belum dikembalikan) - dari hari sebelumnya
-        $alatBelumKembali = PeminjamanAlat::with('alat')
-            ->where('status', 'dipinjam')
-            ->whereDate('tanggal_pinjam', '<', $today)
-            ->take(10)
-            ->get();
-
-        // Gabungkan semua aktivitas hari ini dan sort berdasarkan waktu terbaru
-        $allAlatActivities = collect()
-            ->merge($alatBaru->map(function($item) {
+        // Hanya tampilkan aktivitas peminjaman
+        $allAlatActivities = $alatBaru->map(function($item) {
                 $item->activity_type = 'baru_dipinjam';
                 $item->activity_time = $item->tanggal_pinjam;
                 return $item;
-            }))
-            ->merge($alatDikembalikan->map(function($item) {
-                $item->activity_type = 'dikembalikan';
-                $item->activity_time = $item->updated_at;
-                return $item;
-            }))
-            ->merge($alatBelumKembali->map(function($item) {
-                $item->activity_type = 'belum_kembali';
-                $item->activity_time = $item->tanggal_pinjam;
-                return $item;
-            }))
+            })
             ->sortByDesc('activity_time')
             ->values();
 
@@ -73,28 +49,16 @@ class PeminjamController extends Controller
         // Total sisa material hari ini (real-time)
         $materialHariIni = Material::sum('stock');
 
-        // Detail material yang baru ditambah (ke stock) hari ini
-        $materialBaru = Material::with('category')
-            ->whereDate('created_at', $today)
-            ->get();
-
-        // Detail material yang diambil hari ini
+        // Detail material yang diambil hari ini saja
         $materialDiambil = PengambilanMaterial::with('material')
             ->whereDate('tanggal_ambil', $today)
             ->get();
 
-        // Gabungkan semua aktivitas material hari ini dan sort berdasarkan waktu terbaru
-        $allMaterialActivities = collect()
-            ->merge($materialBaru->map(function($item) {
-                $item->activity_type = 'baru_ditambah';
-                $item->activity_time = $item->created_at;
-                return $item;
-            }))
-            ->merge($materialDiambil->map(function($item) {
+        $allMaterialActivities = $materialDiambil->map(function($item) {
                 $item->activity_type = 'diambil';
                 $item->activity_time = $item->created_at;
                 return $item;
-            }))
+            })
             ->sortByDesc('activity_time')
             ->values();
 

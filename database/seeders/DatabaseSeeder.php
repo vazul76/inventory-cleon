@@ -86,13 +86,18 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Matabor Tembok 10mm', 'description' => 'Mata bor tembok diameter 10mm'],
         ];
 
-        foreach ($alats as $alat) {
+        $totalAlat = count($alats);
+        $halfIndex = (int) ($totalAlat / 2);
+
+        foreach ($alats as $index => $alat) {
+            $available = $index < $halfIndex ? 10 : 0;
+
             Alat::create([
                 'name' => $alat['name'],
                 'category_id' => $alatCategory->id,
                 'description' => $alat['description'],
+                'available' => $available,
                 'status' => 'available',
-                'available' => 1,
             ]);
         }
 
@@ -136,12 +141,17 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Fastcont', 'description' => 'Fastcont', 'stock' => 0],
         ];
 
-        foreach ($materials as $material) {
+        $totalMaterials = count($materials);
+        $halfMaterialIndex = (int) ($totalMaterials / 2);
+
+        foreach ($materials as $index => $material) {
+            $stock = $index < $halfMaterialIndex ? 10 : 0;
+
             Material::create([
                 'name' => $material['name'],
                 'category_id' => $materialCategory->id,
                 'description' => $material['description'],
-                'stock' => $material['stock'],
+                'stock' => $stock,
             ]);
         }
 
