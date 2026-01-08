@@ -24,12 +24,10 @@ class DatabaseSeeder extends Seeder
         // Buat Kategori Static
         $alatCategory = Category::create([
             'name' => 'Alat',
-            'description' => 'Alat-alat yang dapat dipinjam',
         ]);
 
         $materialCategory = Category::create([
             'name' => 'Material',
-            'description' => 'Material yang dapat diambil',
         ]);
 
         // Buat Alat
