@@ -1,6 +1,5 @@
 @extends('teknisi.layout')
 @section('page-title', 'Pengembalian')
-@section('page-subtitle', 'Daftar alat yang sedang dipinjam')
 
 @section('content')
 
@@ -18,7 +17,7 @@
             <button id="btn-kembalikan-multiple" 
                     class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
                     disabled>
-                Kembalikan Alat Terpilih
+                Kembalikan Alat
             </button>
         </div>
 

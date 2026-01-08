@@ -38,26 +38,13 @@ class AlatResource extends Resource
                             ->disabled()
                             ->dehydrated(),
                         
-                        Forms\Components\TextInput::make('quantity')
-                            ->label('Total Quantity')
-                            ->required()
-                            ->numeric()
-                            ->default(1)
-                            ->minValue(1)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
-                                if ($operation === 'create') {
-                                    $set('available', $state);
-                                }
-                            }),
-                        
                         Forms\Components\TextInput::make('available')
-                            ->label('Tersedia')
+                            ->label('Jumlah')
                             ->required()
                             ->numeric()
                             ->default(1)
                             ->minValue(0)
-                            ->helperText('Jumlah yang tersedia untuk dipinjam'),
+                            ->helperText('Jumlah alat yang tersedia'),
                         
                         Forms\Components\Select::make('status')
                             ->label('Status')
@@ -91,14 +78,8 @@ class AlatResource extends Resource
                     ->label('Kategori')
                     ->badge(),
                 
-                Tables\Columns\TextColumn::make('quantity')
-                    ->label('Total')
-                    ->alignCenter()
-                    ->badge()
-                    ->color('gray'),
-                
                 Tables\Columns\TextColumn::make('available')
-                    ->label('Tersedia')
+                    ->label('Jumlah')
                     ->alignCenter()
                     ->badge()
                     ->color(fn (int $state): string => match (true) {

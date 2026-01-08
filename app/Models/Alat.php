@@ -14,7 +14,6 @@ class Alat extends Model
         'category_id',
         'description',
         'status',
-        'quantity',
         'available',
     ];
 

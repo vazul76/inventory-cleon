@@ -94,7 +94,6 @@ class DatabaseSeeder extends Seeder
                 'category_id' => $alatCategory->id,
                 'description' => $alat['description'],
                 'status' => 'available',
-                'quantity' => 1,
                 'available' => 1,
             ]);
         }

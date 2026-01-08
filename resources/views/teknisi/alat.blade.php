@@ -1,6 +1,5 @@
 @extends('teknisi.layout')
 @section('page-title', 'Alat')
-@section('page-subtitle', 'Pilih alat yang ingin dipinjam untuk pekerjaan lapangan')
 
 @section('content')
 
@@ -31,7 +30,7 @@
                             <input type="checkbox" id="select-all" class="w-4 h-4 text-blue-600 rounded">
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Alat</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                        <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tersedia</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
@@ -50,7 +49,7 @@
                         <td class="px-6 py-4">
                             <div class="text-sm font-medium text-gray-900">{{ $alat->name }}</div>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="hidden md:table-cell px-6 py-4">
                             <div class="text-sm text-gray-600">{{ $alat->description ?: '-' }}</div>
                         </td>
                         <td class="px-6 py-4 text-center">

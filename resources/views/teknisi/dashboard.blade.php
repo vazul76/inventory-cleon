@@ -1,14 +1,13 @@
 @extends('teknisi.layout')
 
 @section('page-title', 'Dashboard')
-@section('page-subtitle', 'Statistik peminjaman tools dan pengambilan perangkat')
 
 @section('content')
 
 <!-- ========== SECTION TOOLS ========== -->
 <div class="mb-8">
     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-        <span class="text-2xl mr-2">🔧</span>
+        <i class="fas fa-tools text-2xl mr-2"></i>
         Statistik Alat
     </h3>
 
@@ -22,7 +21,7 @@
                     <h4 class="text-4xl font-bold mt-2">{{ $alatKemarin }}</h4>
                     <p class="text-blue-100 text-xs mt-1">{{ now()->subDay()->format('d M Y') }}</p>
                 </div>
-                <div class="text-6xl opacity-20">📊</div>
+                <i class="fas fa-chart-bar text-6xl opacity-20"></i>
             </div>
         </div>
 
@@ -34,7 +33,7 @@
                     <h4 class="text-4xl font-bold mt-2">{{ $alatHariIni }}</h4>
                     <p class="text-green-100 text-xs mt-1">{{ now()->format('d M Y') }}</p>
                 </div>
-                <div class="text-6xl opacity-20">📈</div>
+                <i class="fas fa-chart-line text-6xl opacity-20"></i>
             </div>
         </div>
     </div>
@@ -68,7 +67,7 @@
                                     <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_pinjam->format('d M Y H:i') }}</td>
                                     <td class="px-4 py-3">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            🆕 Baru Dipinjam
+                                            <i class="fas fa-plus-circle mr-1"></i> Dipinjam
                                         </span>
                                     </td>
                                 </tr>
@@ -79,7 +78,7 @@
                                     <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_kembali->format('d M Y H:i') }}</td>
                                     <td class="px-4 py-3">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            ✅ Dikembalikan
+                                            <i class="fas fa-check-circle mr-1"></i> Dikembalikan
                                         </span>
                                     </td>
                                 </tr>
@@ -90,7 +89,7 @@
                                     <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_pinjam->format('d M Y H:i') }}</td>
                                     <td class="px-4 py-3">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                            ⏳ Belum Dikembalikan
+                                            <i class="fas fa-clock mr-1"></i> Belum Dikembalikan
                                         </span>
                                     </td>
                                 </tr>
@@ -107,7 +106,7 @@
 <!-- ========== SECTION PERANGKAT ========== -->
 <div class="mb-8">
     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-        <span class="text-2xl mr-2">📡</span>
+        <i class="fas fa-broadcast-tower text-2xl mr-2"></i>
         Statistik Material
     </h3>
 
@@ -121,7 +120,7 @@
                     <h4 class="text-4xl font-bold mt-2">{{ $materialKemarin }}</h4>
                     <p class="text-purple-100 text-xs mt-1">{{ now()->subDay()->format('d M Y') }}</p>
                 </div>
-                <div class="text-6xl opacity-20">📊</div>
+                <i class="fas fa-chart-bar text-6xl opacity-20"></i>
             </div>
         </div>
 
@@ -133,7 +132,7 @@
                     <h4 class="text-4xl font-bold mt-2">{{ $materialHariIni }}</h4>
                     <p class="text-orange-100 text-xs mt-1">{{ now()->format('d M Y') }}</p>
                 </div>
-                <div class="text-6xl opacity-20">📈</div>
+                <i class="fas fa-chart-line text-6xl opacity-20"></i>
             </div>
         </div>
     </div>
@@ -171,7 +170,7 @@
                                     <td class="px-4 py-3 text-sm text-gray-600">{{ $item->created_at->format('d M Y H:i') }}</td>
                                     <td class="px-4 py-3">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            🆕 Baru Ditambahkan
+                                            <i class="fas fa-plus-circle mr-1"></i> Baru Ditambahkan
                                         </span>
                                     </td>
                                 </tr>
@@ -185,7 +184,7 @@
                                     <td class="px-4 py-3 text-sm text-gray-600">{{ $item->tanggal_ambil->format('d M Y H:i') }}</td>
                                     <td class="px-4 py-3">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                                            📤 Diambil
+                                            <i class="fas fa-arrow-circle-up mr-1"></i> Diambil
                                         </span>
                                     </td>
                                 </tr>

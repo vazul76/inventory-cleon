@@ -1,7 +1,6 @@
 @extends('teknisi.layout')
 
 @section('page-title', 'Riwayat Saya')
-@section('page-subtitle', 'Cari riwayat peminjaman dan pengambilan berdasarkan nama tim')
 @section('content')
 
 <!-- Form Pencarian -->
@@ -19,7 +18,7 @@
 @if($nama)
     <!-- Riwayat Tools -->
     <div class="mb-8">
-        <h3 class="text-2xl font-semibold mb-4">🔧 Riwayat Peminjaman Tools</h3>
+        <h3 class="text-2xl font-semibold mb-4"><i class="fas fa-tools mr-2"></i> Riwayat Peminjaman Tools</h3>
         
         @if($riwayatAlat->isEmpty())
             <div class="bg-gray-100 px-4 py-3 rounded">
