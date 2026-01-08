@@ -155,7 +155,7 @@ class PeminjamController extends Controller
     }
 
     // Proses Kembalikan Alat
-    public function kembalikanAlat($id)
+    public function kembalikanAlat(Request $request, $id)
     {
         $peminjaman = PeminjamanAlat::findOrFail($id);
 
@@ -163,12 +163,26 @@ class PeminjamController extends Controller
             return back()->with('error', 'Alat sudah dikembalikan!');
         }
 
+        // Get jumlah kembali from request
+        $jumlahData = json_decode($request->input('jumlah_data', '{}'), true);
+        $jumlahKembali = isset($jumlahData[$id]) ? (int)$jumlahData[$id] : $peminjaman->jumlah;
+
+        // Validasi: jumlah kembali tidak boleh melebihi yang dipinjam
+        if ($jumlahKembali > $peminjaman->jumlah) {
+            return back()->with('error', "Jumlah pengembalian ({$jumlahKembali} unit) melebihi jumlah yang dipinjam ({$peminjaman->jumlah} unit)!");
+        }
+
+        if ($jumlahKembali < 1) {
+            return back()->with('error', 'Jumlah pengembalian minimal 1 unit!');
+        }
+
         $peminjaman->update([
             'status' => 'dikembalikan',
             'tanggal_kembali' => now(),
         ]);
 
-        $peminjaman->alat->tambahAvailable($peminjaman->jumlah);
+        // Add back to available stock
+        $peminjaman->alat->tambahAvailable($jumlahKembali);
 
         return redirect()->route('peminjam.pengembalian-alat')->with('success', 'Alat berhasil dikembalikan!');
     }
@@ -186,15 +200,34 @@ class PeminjamController extends Controller
             return back()->with('error', 'Tidak ada alat yang dipilih!');
         }
 
+        // Get jumlah data
+        $jumlahData = json_decode($request->input('jumlah_data', '{}'), true);
+
+        // Validasi dulu semua item
         foreach ($ids as $id) {
             $peminjaman = PeminjamanAlat::findOrFail($id);
+            $jumlahKembali = isset($jumlahData[$id]) ? (int)$jumlahData[$id] : $peminjaman->jumlah;
+            
+            if ($jumlahKembali > $peminjaman->jumlah) {
+                return back()->with('error', "Jumlah pengembalian {$peminjaman->alat->name} ({$jumlahKembali} unit) melebihi yang dipinjam ({$peminjaman->jumlah} unit)!");
+            }
+            
+            if ($jumlahKembali < 1) {
+                return back()->with('error', "Jumlah pengembalian {$peminjaman->alat->name} minimal 1 unit!");
+            }
+        }
+
+        // Jika validasi lolos, baru proses pengembalian
+        foreach ($ids as $id) {
+            $peminjaman = PeminjamanAlat::findOrFail($id);
+            $jumlahKembali = isset($jumlahData[$id]) ? (int)$jumlahData[$id] : $peminjaman->jumlah;
             
             $peminjaman->update([
                 'status' => 'dikembalikan',
                 'tanggal_kembali' => now(),
             ]);
             
-            $peminjaman->alat->tambahAvailable($peminjaman->jumlah);
+            $peminjaman->alat->tambahAvailable($jumlahKembali);
         }
 
         $count = count($ids);
@@ -290,50 +323,48 @@ class PeminjamController extends Controller
     // Proses Kembalikan Material
     public function kembalikanMaterial(Request $request, $id)
     {
-        $request->validate([
-            'jumlah_kembali' => 'required|integer|min:1',
-        ]);
-
         $pengambilan = PengambilanMaterial::findOrFail($id);
 
         if ($pengambilan->status !== 'diambil') {
             return back()->with('error', 'Material sudah dikembalikan!');
         }
 
-        $jumlahKembali = $request->jumlah_kembali;
+        // Get jumlah kembali from request
+        $jumlahData = json_decode($request->input('jumlah_data', '{}'), true);
+        $itemsData = json_decode($request->input('items', '[]'), true);
+        
+        // Try to get from jumlahData first, then itemsData
+        $jumlahKembali = $pengambilan->jumlah; // default
+        
+        if (isset($jumlahData[$id])) {
+            $jumlahKembali = (int)$jumlahData[$id];
+        } elseif (!empty($itemsData)) {
+            foreach ($itemsData as $item) {
+                if ($item['id'] == $id) {
+                    $jumlahKembali = (int)$item['jumlah_kembali'];
+                    break;
+                }
+            }
+        }
 
+        // Validasi: jumlah kembali tidak boleh melebihi yang diambil
         if ($jumlahKembali > $pengambilan->jumlah) {
-            return back()->with('error', 'Jumlah pengembalian melebihi jumlah yang diambil!');
+            return back()->with('error', "Jumlah pengembalian ({$jumlahKembali} unit) melebihi jumlah yang diambil ({$pengambilan->jumlah} unit)!");
         }
 
-        // Jika dikembalikan semua
-        if ($jumlahKembali == $pengambilan->jumlah) {
-            $pengambilan->update([
-                'status' => 'dikembalikan',
-                'tanggal_kembali' => now(),
-            ]);
-            $pengambilan->material->tambahStock($jumlahKembali);
-        } else {
-            // Jika dikembalikan sebagian, update jumlah yang masih diambil
-            $pengambilan->update([
-                'jumlah' => $pengambilan->jumlah - $jumlahKembali,
-            ]);
-            
-            // Buat record baru untuk yang dikembalikan
-            PengambilanMaterial::create([
-                'material_id' => $pengambilan->material_id,
-                'nama_pengambil' => $pengambilan->nama_pengambil,
-                'jumlah' => $jumlahKembali,
-                'tanggal_ambil' => $pengambilan->tanggal_ambil,
-                'tanggal_kembali' => now(),
-                'status' => 'dikembalikan',
-                'keperluan' => $pengambilan->keperluan,
-            ]);
-            
-            $pengambilan->material->tambahStock($jumlahKembali);
+        if ($jumlahKembali < 1) {
+            return back()->with('error', 'Jumlah pengembalian minimal 1 unit!');
         }
 
-        return redirect()->route('peminjam.pengembalian-material')->with('success', "Berhasil mengembalikan {$jumlahKembali} unit material!");
+        $pengambilan->update([
+            'status' => 'dikembalikan',
+            'tanggal_kembali' => now(),
+        ]);
+
+        // Add back to stock
+        $pengambilan->material->tambahStock($jumlahKembali);
+
+        return redirect()->route('peminjam.pengembalian-material')->with('success', 'Material berhasil dikembalikan!');
     }
 
     // Proses Kembalikan Multiple Material
@@ -349,45 +380,42 @@ class PeminjamController extends Controller
             return back()->with('error', 'Tidak ada material yang dipilih!');
         }
 
-        $totalKembali = 0;
+        // Get jumlah data
+        $jumlahData = json_decode($request->input('jumlah_data', '{}'), true);
+
+        // Validasi dulu semua item
         foreach ($items as $item) {
             $pengambilan = PengambilanMaterial::findOrFail($item['id']);
-            $jumlahKembali = $item['jumlah_kembali'];
-
+            $jumlahKembali = isset($jumlahData[$item['id']]) 
+                ? (int)$jumlahData[$item['id']] 
+                : (int)$item['jumlah_kembali'];
+            
             if ($jumlahKembali > $pengambilan->jumlah) {
-                return back()->with('error', "Jumlah pengembalian {$pengambilan->material->name} melebihi jumlah yang diambil!");
+                return back()->with('error', "Jumlah pengembalian {$pengambilan->material->name} ({$jumlahKembali} unit) melebihi yang diambil ({$pengambilan->jumlah} unit)!");
             }
             
-            // Jika dikembalikan semua
-            if ($jumlahKembali == $pengambilan->jumlah) {
-                $pengambilan->update([
-                    'status' => 'dikembalikan',
-                    'tanggal_kembali' => now(),
-                ]);
-            } else {
-                // Jika dikembalikan sebagian
-                $pengambilan->update([
-                    'jumlah' => $pengambilan->jumlah - $jumlahKembali,
-                ]);
-                
-                // Buat record baru untuk yang dikembalikan
-                PengambilanMaterial::create([
-                    'material_id' => $pengambilan->material_id,
-                    'nama_pengambil' => $pengambilan->nama_pengambil,
-                    'jumlah' => $jumlahKembali,
-                    'tanggal_ambil' => $pengambilan->tanggal_ambil,
-                    'tanggal_kembali' => now(),
-                    'status' => 'dikembalikan',
-                    'keperluan' => $pengambilan->keperluan,
-                ]);
+            if ($jumlahKembali < 1) {
+                return back()->with('error', "Jumlah pengembalian {$pengambilan->material->name} minimal 1 unit!");
             }
+        }
+
+        // Jika validasi lolos, baru proses pengembalian
+        foreach ($items as $item) {
+            $pengambilan = PengambilanMaterial::findOrFail($item['id']);
+            $jumlahKembali = isset($jumlahData[$item['id']]) 
+                ? (int)$jumlahData[$item['id']] 
+                : (int)$item['jumlah_kembali'];
+            
+            $pengambilan->update([
+                'status' => 'dikembalikan',
+                'tanggal_kembali' => now(),
+            ]);
             
             $pengambilan->material->tambahStock($jumlahKembali);
-            $totalKembali += $jumlahKembali;
         }
 
         $count = count($items);
-        $message = "{$totalKembali} unit material dari {$count} item berhasil dikembalikan!";
+        $message = $count === 1 ? 'Material berhasil dikembalikan!' : "{$count} material berhasil dikembalikan!";
         
         return redirect()->route('peminjam.pengembalian-material')->with('success', $message);
     }
