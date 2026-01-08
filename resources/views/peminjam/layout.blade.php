@@ -177,25 +177,25 @@
                     <span class="sidebar-icon text-lg"><i class="fas fa-home"></i></span>
                     <span class="sidebar-text">Dashboard</span>
                 </a>
-                
+
+                <div class="sidebar-divider px-6 pt-4 text-xs text-gray-500 uppercase">Peminjaman</div>
                 <a href="{{ route('peminjam.alat') }}" 
                    class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('peminjam.alat') ? 'active' : '' }}">
                     <span class="sidebar-icon text-lg"><i class="fas fa-tools"></i></span>
                     <span class="sidebar-text">Alat</span>
                 </a>
-
-                <a href="{{ route('peminjam.pengembalian-alat') }}" 
-                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('peminjam.pengembalian-alat') ? 'active' : '' }}">
-                    <span class="sidebar-icon text-lg"><i class="fas fa-toolbox"></i></span>
-                    <span class="sidebar-text">Pengembalian Alat</span>
-                </a>
-
                 <a href="{{ route('peminjam.material') }}" 
                    class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('peminjam.material') ? 'active' : '' }}">
                     <span class="sidebar-icon text-lg"><i class="fas fa-cube"></i></span>
                     <span class="sidebar-text">Material</span>
                 </a>
 
+                <div class="sidebar-divider px-6 pt-4 text-xs text-gray-500 uppercase">Pengembalian</div>
+                <a href="{{ route('peminjam.pengembalian-alat') }}" 
+                   class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('peminjam.pengembalian-alat') ? 'active' : '' }}">
+                    <span class="sidebar-icon text-lg"><i class="fas fa-toolbox"></i></span>
+                    <span class="sidebar-text">Pengembalian Alat</span>
+                </a>
                 <a href="{{ route('peminjam.pengembalian-material') }}" 
                    class="sidebar-link flex items-center px-6 py-3 text-gray-700 {{ request()->routeIs('peminjam.pengembalian-material') ? 'active' : '' }}">
                     <span class="sidebar-icon text-lg"><i class="fas fa-box-open"></i></span>
@@ -204,8 +204,8 @@
             </nav>
 
             <!-- Footer Sidebar -->
-            <div class="sidebar-footer absolute bottom-0 w-full p-4 bg-gray-100 text-center text-sm text-gray-600">
-                <p>&copy; 2026 Vazul</p>
+            <div class="sidebar-footer absolute bottom-0 w-full p-4 bg-white-100 text-center text-sm text-gray-600">
+                <p>Cleon</p>
             </div>
         </aside>
 

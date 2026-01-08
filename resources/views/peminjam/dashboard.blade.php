@@ -7,11 +7,11 @@
 <!-- ========== SECTION TOOLS ========== -->
 <div class="mb-8">
     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-        <i class="fas fa-tools text-2xl mr-2"></i>
-        Statistik Alat
+        <i class="fas fa-chart-line text-2xl mr-2"></i>
+        Statistik
     </h3>
 
-    <!-- Cards:  Kemarin vs Hari Ini -->
+    <!-- Cards Alat:  Kemarin vs Hari Ini -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <!-- Card Kemarin -->
         <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
@@ -37,11 +37,37 @@
             </div>
         </div>
     </div>
+    <!-- Cards Material:  Kemarin vs Hari Ini -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Card Kemarin -->
+        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-purple-100 text-sm font-medium">Total Sisa Material Kemarin</p>
+                    <h4 class="text-4xl font-bold mt-2">{{ $materialKemarin }}</h4>
+                    <p class="text-purple-100 text-xs mt-1">{{ now()->subDay()->format('d M Y') }}</p>
+                </div>
+                <i class="fas fa-chart-bar text-6xl opacity-20"></i>
+            </div>
+        </div>
+
+        <!-- Card Hari Ini -->
+        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-orange-100 text-sm font-medium">Total Sisa Material Hari Ini</p>
+                    <h4 class="text-4xl font-bold mt-2">{{ $materialHariIni }}</h4>
+                    <p class="text-orange-100 text-xs mt-1">{{ now()->format('d M Y') }}</p>
+                </div>
+                <i class="fas fa-chart-line text-6xl opacity-20"></i>
+            </div>
+        </div>
+    </div>
 
     <!-- Detail Tools -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="px-6 py-4 bg-gray-50 border-b">
-            <h4 class="font-semibold text-gray-800">Detail Update Alat Hari Ini</h4>
+            <h4 class="font-bold text-gray-800">Detail Update Alat Hari Ini</h4>
         </div>
         
         <div class="p-6">
@@ -101,46 +127,11 @@
             @endif
         </div>
     </div>
-</div>
 
-<!-- ========== SECTION PERANGKAT ========== -->
-<div class="mb-8">
-    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-        <i class="fas fa-broadcast-tower text-2xl mr-2"></i>
-        Statistik Material
-    </h3>
-
-    <!-- Cards:  Kemarin vs Hari Ini -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <!-- Card Kemarin -->
-        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-purple-100 text-sm font-medium">Total Sisa Material Kemarin</p>
-                    <h4 class="text-4xl font-bold mt-2">{{ $materialKemarin }}</h4>
-                    <p class="text-purple-100 text-xs mt-1">{{ now()->subDay()->format('d M Y') }}</p>
-                </div>
-                <i class="fas fa-chart-bar text-6xl opacity-20"></i>
-            </div>
-        </div>
-
-        <!-- Card Hari Ini -->
-        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-orange-100 text-sm font-medium">Total Sisa Material Hari Ini</p>
-                    <h4 class="text-4xl font-bold mt-2">{{ $materialHariIni }}</h4>
-                    <p class="text-orange-100 text-xs mt-1">{{ now()->format('d M Y') }}</p>
-                </div>
-                <i class="fas fa-chart-line text-6xl opacity-20"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Detail Perangkat -->
+        <!-- Detail Perangkat -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="px-6 py-4 bg-gray-50 border-b">
-            <h4 class="font-semibold text-gray-800">Detail Update Material Hari Ini</h4>
+            <h4 class="font-bold text-gray-800">Detail Update Material Hari Ini</h4>
         </div>
         
         <div class="p-6">

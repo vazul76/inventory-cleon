@@ -10,15 +10,27 @@
         </div>
     @else
         <!-- Action Bar -->
-        <div class="mb-4 flex justify-between items-center">
-            <div>
+        <div class="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="flex items-center gap-3">
                 <span id="selected-count" class="text-gray-600">0 alat dipilih</span>
+                <button id="btn-pinjam-multiple" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        disabled>
+                    Pinjam Alat
+                </button>
             </div>
-            <button id="btn-pinjam-multiple" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
-                    disabled>
-                Pinjam Alat
-            </button>
+
+            <form method="GET" action="{{ route('peminjam.alat') }}" class="w-full md:w-auto flex justify-end">
+                <div class="relative w-full md:w-64">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m0 0A7.5 7.5 0 1 0 5 5a7.5 7.5 0 0 0 11.65 11.65Z" />
+                        </svg>
+                    </span>
+                    <input type="search" name="q" value="{{ isset($q) ? $q : request('q') }}" placeholder="Cari alat..."
+                           class="h-10 w-full pl-10 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+            </form>
         </div>
 
         <!-- Table Alat -->

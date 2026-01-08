@@ -111,13 +111,19 @@ class PeminjamController extends Controller
     // ========== ALAT ==========
     
     // Halaman Lihat Alat
-    public function alat()
+    public function alat(Request $request)
     {
+        $q = $request->input('q');
+
         $alats = Alat::with('category')
+            ->when($q, function($query, $q) {
+                $query->where('name', 'LIKE', "%{$q}%")
+                      ->orWhere('description', 'LIKE', "%{$q}%");
+            })
             ->orderBy('name', 'asc')
             ->get();
         
-        return view('peminjam.alat', compact('alats'));
+        return view('peminjam.alat', compact('alats', 'q'));
     }
 
     // Proses Pinjam Alat
@@ -162,15 +168,26 @@ class PeminjamController extends Controller
     }
 
     // Halaman Kembalikan Alat
-    public function pengembalianAlat()
+    public function pengembalianAlat(Request $request)
     {
+        $q = $request->input('q');
+
         $peminjaman = PeminjamanAlat::with('alat')
             ->where('status', 'dipinjam')
+            ->when($q, function($query, $q) {
+                $query->where(function($sub) use ($q) {
+                    $sub->whereHas('alat', function($alat) use ($q) {
+                            $alat->where('name', 'LIKE', "%{$q}%");
+                        })
+                        ->orWhere('nama_peminjam', 'LIKE', "%{$q}%")
+                        ->orWhere('keterangan', 'LIKE', "%{$q}%");
+                });
+            })
             ->orderBy('tanggal_pinjam', 'desc')
             ->orderBy('id', 'desc')
             ->get();
 
-        return view('peminjam.pengembalian-alat', compact('peminjaman'));
+        return view('peminjam.pengembalian-alat', compact('peminjaman', 'q'));
     }
 
     // Proses Kembalikan Alat
@@ -225,13 +242,21 @@ class PeminjamController extends Controller
     // ========== MATERIAL ==========
     
     // Halaman Lihat Material
-    public function material()
+    public function material(Request $request)
     {
+        $q = $request->input('q');
+
         $material = Material::with('category')
+            ->when($q, function($query, $q) {
+                $query->where(function($sub) use ($q) {
+                    $sub->where('name', 'LIKE', "%{$q}%")
+                        ->orWhere('description', 'LIKE', "%{$q}%");
+                });
+            })
             ->orderBy('name', 'asc')
             ->get();
 
-        return view('peminjam.material', compact('material'));
+        return view('peminjam.material', compact('material', 'q'));
     }
 
     // Proses Ambil Material
@@ -276,15 +301,26 @@ class PeminjamController extends Controller
     }
 
     // Halaman Pengembalian Material
-    public function pengembalianMaterial()
+    public function pengembalianMaterial(Request $request)
     {
+        $q = $request->input('q');
+
         $pengambilan = PengambilanMaterial::with('material')
             ->where('status', 'diambil')
+            ->when($q, function($query, $q) {
+                $query->where(function($sub) use ($q) {
+                    $sub->whereHas('material', function($mat) use ($q) {
+                            $mat->where('name', 'LIKE', "%{$q}%");
+                        })
+                        ->orWhere('nama_pengambil', 'LIKE', "%{$q}%")
+                        ->orWhere('keperluan', 'LIKE', "%{$q}%");
+                });
+            })
             ->orderBy('tanggal_ambil', 'desc')
             ->orderBy('id', 'desc')
             ->get();
 
-        return view('peminjam.pengembalian-material', compact('pengambilan'));
+        return view('peminjam.pengembalian-material', compact('pengambilan', 'q'));
     }
 
     // Proses Kembalikan Material
