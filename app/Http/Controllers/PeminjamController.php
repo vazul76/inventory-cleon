@@ -356,15 +356,26 @@ class PeminjamController extends Controller
             return back()->with('error', 'Jumlah pengembalian minimal 1 unit!');
         }
 
-        $pengambilan->update([
-            'status' => 'dikembalikan',
-            'tanggal_kembali' => now(),
-        ]);
-
         // Add back to stock
         $pengambilan->material->tambahStock($jumlahKembali);
 
-        return redirect()->route('peminjam.pengembalian-material')->with('success', 'Material berhasil dikembalikan!');
+        // Jika dikembalikan semua, ubah status menjadi dikembalikan
+        if ($jumlahKembali >= $pengambilan->jumlah) {
+            $pengambilan->update([
+                'status' => 'dikembalikan',
+                'tanggal_kembali' => now(),
+            ]);
+            $message = 'Material berhasil dikembalikan!';
+        } else {
+            // Jika dikembalikan sebagian, kurangi jumlah yang masih diambil
+            $pengambilan->update([
+                'jumlah' => $pengambilan->jumlah - $jumlahKembali,
+            ]);
+            $sisaJumlah = $pengambilan->jumlah - $jumlahKembali;
+            $message = "Berhasil mengembalikan {$jumlahKembali} unit. Sisa yang masih diambil: {$sisaJumlah} unit.";
+        }
+
+        return redirect()->route('peminjam.pengembalian-material')->with('success', $message);
     }
 
     // Proses Kembalikan Multiple Material
@@ -406,12 +417,21 @@ class PeminjamController extends Controller
                 ? (int) $jumlahData[$item['id']]
                 : (int) $item['jumlah_kembali'];
 
-            $pengambilan->update([
-                'status' => 'dikembalikan',
-                'tanggal_kembali' => now(),
-            ]);
-
+            // Add back to stock
             $pengambilan->material->tambahStock($jumlahKembali);
+
+            // Jika dikembalikan semua, ubah status menjadi dikembalikan
+            if ($jumlahKembali >= $pengambilan->jumlah) {
+                $pengambilan->update([
+                    'status' => 'dikembalikan',
+                    'tanggal_kembali' => now(),
+                ]);
+            } else {
+                // Jika dikembalikan sebagian, kurangi jumlah yang masih diambil
+                $pengambilan->update([
+                    'jumlah' => $pengambilan->jumlah - $jumlahKembali,
+                ]);
+            }
         }
 
         $count = count($items);
