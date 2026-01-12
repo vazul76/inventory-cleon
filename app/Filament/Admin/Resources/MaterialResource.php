@@ -106,7 +106,7 @@ class MaterialResource extends Resource
                         'available' => 'Tersedia',
                         'unavailable' => 'Tidak Tersedia',
                     ]),
-            ])git
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

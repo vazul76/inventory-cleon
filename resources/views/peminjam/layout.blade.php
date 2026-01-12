@@ -227,7 +227,7 @@
 
                 <!-- Footer Sidebar -->
                 <div class="sidebar-footer absolute bottom-0 w-full p-4 bg-white-100 text-center text-sm text-gray-600">
-                    <p>Cleon</p>
+                    <p>© Cleon-2026</p>
                 </div>
             </aside>
 
