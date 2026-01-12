@@ -69,7 +69,7 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->dateTime('tanggal_ambil');
             $table->dateTime('tanggal_kembali')->nullable();
-            $table->enum('status', ['diambil', 'dikembalikan'])->default('diambil');
+            $table->enum('status', ['diambil', 'dikembalikan', 'dipakai'])->default('diambil');
             $table->text('keperluan')->nullable();
             $table->timestamps();
         });

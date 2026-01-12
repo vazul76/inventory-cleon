@@ -18,7 +18,9 @@ Sistem manajemen inventori untuk pengelolaan alat dan material di Cleon. Aplikas
 - **Pengembalian Alat**: Kembalikan alat yang dipinjam (single/multiple)
 - **Pengambilan Material**: Ambil material yang tersedia
 - **Pengembalian Material**: Kembalikan material yang diambil (single/multiple)
-- **Riwayat**: Lihat history peminjaman dan pengambilan
+- **Riwayat**: Lihat history peminjaman dan pengambilan (filter by name)
+- **Riwayat Aktivitas**: Lihat semua aktivitas dari semua tim dengan filter tanggal (Filament-style)
+
 
 ## Tech Stack
 

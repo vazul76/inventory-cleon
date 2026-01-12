@@ -19,7 +19,7 @@ class PeminjamController extends Controller
         $yesterday = Carbon::yesterday();
 
         // ========== ALAT STATS ==========
-        
+
         // Total sisa alat kemarin (dari snapshot)
         $snapshotKemarin = StockSnapshot::whereDate('tanggal', $yesterday)->first();
         $alatKemarin = $snapshotKemarin ? $snapshotKemarin->total_alat_available : Alat::sum('available');
@@ -33,16 +33,16 @@ class PeminjamController extends Controller
             ->get();
 
         // Hanya tampilkan aktivitas peminjaman
-        $allAlatActivities = $alatBaru->map(function($item) {
-                $item->activity_type = 'baru_dipinjam';
-                $item->activity_time = $item->tanggal_pinjam;
-                return $item;
-            })
+        $allAlatActivities = $alatBaru->map(function ($item) {
+            $item->activity_type = 'baru_dipinjam';
+            $item->activity_time = $item->tanggal_pinjam;
+            return $item;
+        })
             ->sortByDesc('activity_time')
             ->values();
 
         // ========== MATERIAL STATS ==========
-        
+
         // Total sisa material kemarin (dari snapshot)
         $materialKemarin = $snapshotKemarin ? $snapshotKemarin->total_material_stock : Material::sum('stock');
 
@@ -54,11 +54,11 @@ class PeminjamController extends Controller
             ->whereDate('tanggal_ambil', $today)
             ->get();
 
-        $allMaterialActivities = $materialDiambil->map(function($item) {
-                $item->activity_type = 'diambil';
-                $item->activity_time = $item->created_at;
-                return $item;
-            })
+        $allMaterialActivities = $materialDiambil->map(function ($item) {
+            $item->activity_type = 'diambil';
+            $item->activity_time = $item->created_at;
+            return $item;
+        })
             ->sortByDesc('activity_time')
             ->values();
 
@@ -73,20 +73,20 @@ class PeminjamController extends Controller
     }
 
     // ========== ALAT ==========
-    
+
     // Halaman Lihat Alat
     public function alat(Request $request)
     {
         $q = $request->input('q');
 
         $alats = Alat::with('category')
-            ->when($q, function($query, $q) {
+            ->when($q, function ($query, $q) {
                 $query->where('name', 'LIKE', "%{$q}%")
-                      ->orWhere('description', 'LIKE', "%{$q}%");
+                    ->orWhere('description', 'LIKE', "%{$q}%");
             })
             ->orderBy('name', 'asc')
             ->get();
-        
+
         return view('peminjam.alat', compact('alats', 'q'));
     }
 
@@ -100,7 +100,7 @@ class PeminjamController extends Controller
         ]);
 
         $alats = json_decode($request->alats, true);
-        
+
         if (empty($alats)) {
             return back()->with('error', 'Tidak ada alat yang dipilih!');
         }
@@ -127,7 +127,7 @@ class PeminjamController extends Controller
 
         $count = count($alats);
         $message = $count === 1 ? 'Alat berhasil dipinjam!' : "{$count} alat berhasil dipinjam!";
-        
+
         return back()->with('success', $message);
     }
 
@@ -138,11 +138,11 @@ class PeminjamController extends Controller
 
         $peminjaman = PeminjamanAlat::with('alat')
             ->where('status', 'dipinjam')
-            ->when($q, function($query, $q) {
-                $query->where(function($sub) use ($q) {
-                    $sub->whereHas('alat', function($alat) use ($q) {
-                            $alat->where('name', 'LIKE', "%{$q}%");
-                        })
+            ->when($q, function ($query, $q) {
+                $query->where(function ($sub) use ($q) {
+                    $sub->whereHas('alat', function ($alat) use ($q) {
+                        $alat->where('name', 'LIKE', "%{$q}%");
+                    })
                         ->orWhere('nama_peminjam', 'LIKE', "%{$q}%")
                         ->orWhere('keterangan', 'LIKE', "%{$q}%");
                 });
@@ -165,7 +165,7 @@ class PeminjamController extends Controller
 
         // Get jumlah kembali from request
         $jumlahData = json_decode($request->input('jumlah_data', '{}'), true);
-        $jumlahKembali = isset($jumlahData[$id]) ? (int)$jumlahData[$id] : $peminjaman->jumlah;
+        $jumlahKembali = isset($jumlahData[$id]) ? (int) $jumlahData[$id] : $peminjaman->jumlah;
 
         // Validasi: jumlah kembali tidak boleh melebihi yang dipinjam
         if ($jumlahKembali > $peminjaman->jumlah) {
@@ -195,7 +195,7 @@ class PeminjamController extends Controller
         ]);
 
         $ids = json_decode($request->peminjaman_ids, true);
-        
+
         if (empty($ids)) {
             return back()->with('error', 'Tidak ada alat yang dipilih!');
         }
@@ -206,12 +206,12 @@ class PeminjamController extends Controller
         // Validasi dulu semua item
         foreach ($ids as $id) {
             $peminjaman = PeminjamanAlat::findOrFail($id);
-            $jumlahKembali = isset($jumlahData[$id]) ? (int)$jumlahData[$id] : $peminjaman->jumlah;
-            
+            $jumlahKembali = isset($jumlahData[$id]) ? (int) $jumlahData[$id] : $peminjaman->jumlah;
+
             if ($jumlahKembali > $peminjaman->jumlah) {
                 return back()->with('error', "Jumlah pengembalian {$peminjaman->alat->name} ({$jumlahKembali} unit) melebihi yang dipinjam ({$peminjaman->jumlah} unit)!");
             }
-            
+
             if ($jumlahKembali < 1) {
                 return back()->with('error', "Jumlah pengembalian {$peminjaman->alat->name} minimal 1 unit!");
             }
@@ -220,32 +220,32 @@ class PeminjamController extends Controller
         // Jika validasi lolos, baru proses pengembalian
         foreach ($ids as $id) {
             $peminjaman = PeminjamanAlat::findOrFail($id);
-            $jumlahKembali = isset($jumlahData[$id]) ? (int)$jumlahData[$id] : $peminjaman->jumlah;
-            
+            $jumlahKembali = isset($jumlahData[$id]) ? (int) $jumlahData[$id] : $peminjaman->jumlah;
+
             $peminjaman->update([
                 'status' => 'dikembalikan',
                 'tanggal_kembali' => now(),
             ]);
-            
+
             $peminjaman->alat->tambahAvailable($jumlahKembali);
         }
 
         $count = count($ids);
         $message = $count === 1 ? 'Alat berhasil dikembalikan!' : "{$count} alat berhasil dikembalikan!";
-        
+
         return redirect()->route('peminjam.pengembalian-alat')->with('success', $message);
     }
 
     // ========== MATERIAL ==========
-    
+
     // Halaman Lihat Material
     public function material(Request $request)
     {
         $q = $request->input('q');
 
         $material = Material::with('category')
-            ->when($q, function($query, $q) {
-                $query->where(function($sub) use ($q) {
+            ->when($q, function ($query, $q) {
+                $query->where(function ($sub) use ($q) {
                     $sub->where('name', 'LIKE', "%{$q}%")
                         ->orWhere('description', 'LIKE', "%{$q}%");
                 });
@@ -266,7 +266,7 @@ class PeminjamController extends Controller
         ]);
 
         $materials = json_decode($request->materials, true);
-        
+
         if (empty($materials)) {
             return back()->with('error', 'Tidak ada material yang dipilih!');
         }
@@ -293,7 +293,7 @@ class PeminjamController extends Controller
 
         $count = count($materials);
         $message = $count === 1 ? 'Material berhasil diambil!' : "{$count} material berhasil diambil!";
-        
+
         return back()->with('success', $message);
     }
 
@@ -304,11 +304,11 @@ class PeminjamController extends Controller
 
         $pengambilan = PengambilanMaterial::with('material')
             ->where('status', 'diambil')
-            ->when($q, function($query, $q) {
-                $query->where(function($sub) use ($q) {
-                    $sub->whereHas('material', function($mat) use ($q) {
-                            $mat->where('name', 'LIKE', "%{$q}%");
-                        })
+            ->when($q, function ($query, $q) {
+                $query->where(function ($sub) use ($q) {
+                    $sub->whereHas('material', function ($mat) use ($q) {
+                        $mat->where('name', 'LIKE', "%{$q}%");
+                    })
                         ->orWhere('nama_pengambil', 'LIKE', "%{$q}%")
                         ->orWhere('keperluan', 'LIKE', "%{$q}%");
                 });
@@ -332,16 +332,16 @@ class PeminjamController extends Controller
         // Get jumlah kembali from request
         $jumlahData = json_decode($request->input('jumlah_data', '{}'), true);
         $itemsData = json_decode($request->input('items', '[]'), true);
-        
+
         // Try to get from jumlahData first, then itemsData
         $jumlahKembali = $pengambilan->jumlah; // default
-        
+
         if (isset($jumlahData[$id])) {
-            $jumlahKembali = (int)$jumlahData[$id];
+            $jumlahKembali = (int) $jumlahData[$id];
         } elseif (!empty($itemsData)) {
             foreach ($itemsData as $item) {
                 if ($item['id'] == $id) {
-                    $jumlahKembali = (int)$item['jumlah_kembali'];
+                    $jumlahKembali = (int) $item['jumlah_kembali'];
                     break;
                 }
             }
@@ -375,7 +375,7 @@ class PeminjamController extends Controller
         ]);
 
         $items = json_decode($request->items, true);
-        
+
         if (empty($items)) {
             return back()->with('error', 'Tidak ada material yang dipilih!');
         }
@@ -386,14 +386,14 @@ class PeminjamController extends Controller
         // Validasi dulu semua item
         foreach ($items as $item) {
             $pengambilan = PengambilanMaterial::findOrFail($item['id']);
-            $jumlahKembali = isset($jumlahData[$item['id']]) 
-                ? (int)$jumlahData[$item['id']] 
-                : (int)$item['jumlah_kembali'];
-            
+            $jumlahKembali = isset($jumlahData[$item['id']])
+                ? (int) $jumlahData[$item['id']]
+                : (int) $item['jumlah_kembali'];
+
             if ($jumlahKembali > $pengambilan->jumlah) {
                 return back()->with('error', "Jumlah pengembalian {$pengambilan->material->name} ({$jumlahKembali} unit) melebihi yang diambil ({$pengambilan->jumlah} unit)!");
             }
-            
+
             if ($jumlahKembali < 1) {
                 return back()->with('error', "Jumlah pengembalian {$pengambilan->material->name} minimal 1 unit!");
             }
@@ -402,21 +402,97 @@ class PeminjamController extends Controller
         // Jika validasi lolos, baru proses pengembalian
         foreach ($items as $item) {
             $pengambilan = PengambilanMaterial::findOrFail($item['id']);
-            $jumlahKembali = isset($jumlahData[$item['id']]) 
-                ? (int)$jumlahData[$item['id']] 
-                : (int)$item['jumlah_kembali'];
-            
+            $jumlahKembali = isset($jumlahData[$item['id']])
+                ? (int) $jumlahData[$item['id']]
+                : (int) $item['jumlah_kembali'];
+
             $pengambilan->update([
                 'status' => 'dikembalikan',
                 'tanggal_kembali' => now(),
             ]);
-            
+
             $pengambilan->material->tambahStock($jumlahKembali);
         }
 
         $count = count($items);
         $message = $count === 1 ? 'Material berhasil dikembalikan!' : "{$count} material berhasil dikembalikan!";
-        
+
+        return redirect()->route('peminjam.pengembalian-material')->with('success', $message);
+    }
+
+    // Proses Material Dipakai (Single)
+    public function dipakaiMaterial(Request $request, $id)
+    {
+        $pengambilan = PengambilanMaterial::findOrFail($id);
+
+        // Get jumlah from JSON if available, otherwise use default
+        $jumlahData = json_decode($request->input('jumlah_data', '{}'), true);
+        $jumlahDipakai = isset($jumlahData[$id]) ? (int) $jumlahData[$id] : $pengambilan->jumlah;
+
+        // Validasi jumlah
+        if ($jumlahDipakai > $pengambilan->jumlah) {
+            return back()->with('error', "Jumlah yang dipakai ({$jumlahDipakai} unit) melebihi yang diambil ({$pengambilan->jumlah} unit)!");
+        }
+
+        if ($jumlahDipakai < 1) {
+            return back()->with('error', 'Jumlah yang dipakai minimal 1 unit!');
+        }
+
+        // Update status menjadi dipakai (stock tidak ditambah)
+        $pengambilan->update([
+            'status' => 'dipakai',
+            'tanggal_kembali' => now(),
+        ]);
+
+        return redirect()->route('peminjam.pengembalian-material')
+            ->with('success', "Material {$pengambilan->material->name} berhasil ditandai sebagai dipakai!");
+    }
+
+    // Proses Material Dipakai (Multiple)
+    public function dipakaiMultipleMaterial(Request $request)
+    {
+        $request->validate([
+            'items' => 'required|json',
+        ]);
+
+        $items = json_decode($request->items, true);
+
+        if (empty($items)) {
+            return back()->with('error', 'Tidak ada material yang dipilih!');
+        }
+
+        // Get jumlah data
+        $jumlahData = json_decode($request->input('jumlah_data', '{}'), true);
+
+        // Validasi dulu semua item
+        foreach ($items as $item) {
+            $pengambilan = PengambilanMaterial::findOrFail($item['id']);
+            $jumlahDipakai = isset($jumlahData[$item['id']])
+                ? (int) $jumlahData[$item['id']]
+                : (int) $item['jumlah_kembali'];
+
+            if ($jumlahDipakai > $pengambilan->jumlah) {
+                return back()->with('error', "Jumlah yang dipakai {$pengambilan->material->name} ({$jumlahDipakai} unit) melebihi yang diambil ({$pengambilan->jumlah} unit)!");
+            }
+
+            if ($jumlahDipakai < 1) {
+                return back()->with('error', "Jumlah yang dipakai {$pengambilan->material->name} minimal 1 unit!");
+            }
+        }
+
+        // Jika validasi lolos, proses sebagai dipakai
+        foreach ($items as $item) {
+            $pengambilan = PengambilanMaterial::findOrFail($item['id']);
+
+            $pengambilan->update([
+                'status' => 'dipakai',
+                'tanggal_kembali' => now(),
+            ]);
+        }
+
+        $count = count($items);
+        $message = $count === 1 ? 'Material berhasil ditandai sebagai dipakai!' : "{$count} material berhasil ditandai sebagai dipakai!";
+
         return redirect()->route('peminjam.pengembalian-material')->with('success', $message);
     }
 
@@ -441,5 +517,30 @@ class PeminjamController extends Controller
         }
 
         return view('peminjam.riwayat', compact('riwayatAlat', 'riwayatMaterial', 'nama'));
+    }
+
+    // Halaman Riwayat Aktivitas (All Teams)
+    public function riwayatAktivitas(Request $request)
+    {
+        // Get date from request (null by default to show all)
+        $tanggal = $request->input('tanggal');
+
+        // Query Alat transactions
+        $riwayatAlat = PeminjamanAlat::with('alat')
+            ->when($tanggal, function ($query) use ($tanggal) {
+                $query->whereDate('tanggal_pinjam', $tanggal);
+            })
+            ->orderBy('tanggal_pinjam', 'desc')
+            ->get();
+
+        // Query Material transactions
+        $riwayatMaterial = PengambilanMaterial::with('material')
+            ->when($tanggal, function ($query) use ($tanggal) {
+                $query->whereDate('tanggal_ambil', $tanggal);
+            })
+            ->orderBy('tanggal_ambil', 'desc')
+            ->get();
+
+        return view('peminjam.riwayat-aktivitas', compact('riwayatAlat', 'riwayatMaterial', 'tanggal'));
     }
 }

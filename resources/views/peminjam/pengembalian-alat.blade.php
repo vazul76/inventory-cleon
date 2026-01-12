@@ -1,5 +1,5 @@
 @extends('peminjam.layout')
-@section('page-title', 'Pengembalian')
+@section('page-title', 'Pengembalian Alat')
 
 @section('content')
 
@@ -14,7 +14,7 @@
                 <div class="flex items-center gap-3">
                     <span id="selected-count" class="text-gray-600">0 alat dipilih</span>
                     <button id="btn-kembalikan-multiple"
-                        class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
                         disabled>
                         Kembalikan Alat
                     </button>
@@ -32,7 +32,7 @@
                         </span>
                         <input type="search" name="q" value="{{ isset($q) ? $q : request('q') }}"
                             placeholder="Cari alat/peminjam..."
-                            class="h-10 w-full pl-10 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                            class="h-10 w-full pl-10 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                     </div>
                 </form>
             </div>
@@ -43,7 +43,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left">
-                                <input type="checkbox" id="select-all" class="w-4 h-4 text-green-600 rounded">
+                                <input type="checkbox" id="select-all" class="w-4 h-4 text-blue-600 rounded">
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alat
                             </th>
@@ -63,7 +63,7 @@
                         @foreach ($peminjaman as $item)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4">
-                                    <input type="checkbox" class="select-peminjaman w-4 h-4 text-green-600 rounded"
+                                    <input type="checkbox" class="select-peminjaman w-4 h-4 text-blue-600 rounded"
                                         value="{{ $item->id }}" data-alat="{{ $item->alat->name }}"
                                         data-jumlah="{{ $item->jumlah }}">
                                 </td>
@@ -73,7 +73,7 @@
                                 <td class="px-6 py-4 text-center">
                                     <span
                                         class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                        {{ $item->jumlah }} unit
+                                        {{ $item->jumlah }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
@@ -88,7 +88,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <button type="button"
-                                        class="btn-kembalikan-single bg-green-600 hover:bg-green-700 text-white text-sm font-semibold py-1 px-4 rounded"
+                                        class="btn-kembalikan-single bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-1 px-4 rounded"
                                         data-id="{{ $item->id }}" data-alat="{{ $item->alat->name }}"
                                         data-jumlah="{{ $item->jumlah }}">
                                         Kembalikan
@@ -144,7 +144,7 @@
                         Batal
                     </button>
                     <button type="submit"
-                        class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded">
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded">
                         Konfirmasi Pengembalian
                     </button>
                 </div>
@@ -231,7 +231,7 @@
                     <span class="font-medium">${item.alat}</span>
                 </div>
                 <div>
-                    <span class="text-sm text-gray-600">${item.jumlah} unit</span>
+                    <span class="text-sm text-gray-600">${item.jumlah}</span>
                 </div>
             `;
                     selectedList.appendChild(div);

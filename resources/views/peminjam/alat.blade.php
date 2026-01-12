@@ -67,11 +67,11 @@
                         <td class="px-6 py-4 text-center">
                             @if($alat->available > 0)
                                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                    {{ $alat->available }} unit
+                                    {{ $alat->available }}
                                 </span>
                             @else
                                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                    0 unit
+                                    0
                                 </span>
                             @endif
                         </td>

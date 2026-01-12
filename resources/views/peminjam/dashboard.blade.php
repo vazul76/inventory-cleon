@@ -17,7 +17,7 @@
         <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-blue-100 text-sm font-medium">Total Sisa Alat Kemarin</p>
+                    <p class="text-blue-100 text-sm font-medium">Total Alat Kemarin</p>
                     <h4 class="text-4xl font-bold mt-2">{{ $alatKemarin }}</h4>
                     <p class="text-blue-100 text-xs mt-1">{{ now()->subDay()->format('d M Y') }}</p>
                 </div>
@@ -29,7 +29,7 @@
         <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-green-100 text-sm font-medium">Total Sisa Alat Hari Ini</p>
+                    <p class="text-green-100 text-sm font-medium">Total Alat Hari Ini</p>
                     <h4 class="text-4xl font-bold mt-2">{{ $alatHariIni }}</h4>
                     <p class="text-green-100 text-xs mt-1">{{ now()->format('d M Y') }}</p>
                 </div>
@@ -43,7 +43,7 @@
         <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-purple-100 text-sm font-medium">Total Sisa Material Kemarin</p>
+                    <p class="text-purple-100 text-sm font-medium">Total Material Kemarin</p>
                     <h4 class="text-4xl font-bold mt-2">{{ $materialKemarin }}</h4>
                     <p class="text-purple-100 text-xs mt-1">{{ now()->subDay()->format('d M Y') }}</p>
                 </div>
@@ -55,7 +55,7 @@
         <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-orange-100 text-sm font-medium">Total Sisa Material Hari Ini</p>
+                    <p class="text-orange-100 text-sm font-medium">Total Material Hari Ini</p>
                     <h4 class="text-4xl font-bold mt-2">{{ $materialHariIni }}</h4>
                     <p class="text-orange-100 text-xs mt-1">{{ now()->format('d M Y') }}</p>
                 </div>

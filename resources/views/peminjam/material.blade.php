@@ -14,7 +14,7 @@
                 <div class="flex items-center gap-3">
                     <span id="selected-count" class="text-gray-600">0 material dipilih</span>
                     <button id="btn-ambil-multiple"
-                        class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
                         disabled>
                         Ambil Material
                     </button>
@@ -29,7 +29,7 @@
                         </span>
                         <input type="search" name="q" value="{{ isset($q) ? $q : request('q') }}"
                             placeholder="Cari material..."
-                            class="h-10 w-full pl-10 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                            class="h-10 w-full pl-10 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                     </div>
                 </form>
             </div>
@@ -40,7 +40,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left">
-                                <input type="checkbox" id="select-all" class="w-4 h-4 text-purple-600 rounded">
+                                <input type="checkbox" id="select-all" class="w-4 h-4 text-blue-600 rounded">
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama
                                 Material</th>
@@ -58,7 +58,7 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4">
                                     @if ($item->stock > 0)
-                                        <input type="checkbox" class="select-material w-4 h-4 text-purple-600 rounded"
+                                        <input type="checkbox" class="select-material w-4 h-4 text-blue-600 rounded"
                                             value="{{ $item->id }}" data-name="{{ $item->name }}"
                                             data-stock="{{ $item->stock }}">
                                     @endif
@@ -73,19 +73,19 @@
                                     @if ($item->stock > 0)
                                         <span
                                             class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                            {{ $item->stock }} unit
+                                            {{ $item->stock }}
                                         </span>
                                     @else
                                         <span
                                             class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                            0 unit
+                                            0
                                         </span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     @if ($item->stock > 0)
                                         <button type="button"
-                                            class="btn-ambil-single bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-1 px-4 rounded"
+                                            class="btn-ambil-single bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-1 px-4 rounded"
                                             data-id="{{ $item->id }}" data-name="{{ $item->name }}"
                                             data-stock="{{ $item->stock }}">
                                             Ambil
@@ -115,14 +115,14 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Nama Tim/Pengambil</label>
                     <input type="text" name="nama_pengambil" id="nama_pengambil" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Misal: Tim 1, Tim Field">
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Keperluan</label>
                     <input type="text" name="keperluan"
-                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Misal: Pemasangan baru">
                 </div>
 
@@ -139,7 +139,7 @@
                         Batal
                     </button>
                     <button type="submit"
-                        class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded">
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded">
                         Konfirmasi Ambil
                     </button>
                 </div>

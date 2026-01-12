@@ -334,6 +334,57 @@ Lihat history lengkap peminjaman dan pengambilan Anda.
 
 ---
 
+### 7. Riwayat Aktivitas
+
+**Menu: Riwayat Aktivitas**
+
+Lihat **semua aktivitas** dari **semua tim** dengan tampilan yang lebih lengkap dan filter berbasis tanggal.
+
+#### Perbedaan dengan Menu Riwayat
+- **Riwayat**: Filter by nama peminjam (hanya history Anda)
+- **Riwayat Aktivitas**: Tampilkan semua aktivitas dari semua tim
+
+#### Fitur Filter (Filament-Style)
+
+1. Klik tombol **Filter** di pojok kanan atas
+2. Panel filter akan muncul sebagai popup (tidak menggeser tabel)
+3. Pilih tanggal yang ingin dilihat
+4. Klik **Terapkan Filter**
+5. Klik **Reset** untuk kembali ke tampilan semua riwayat
+
+#### Data yang Ditampilkan
+
+**Tabel Riwayat Peminjaman Alat:**
+- Nama Alat
+- Nama Tim peminjam
+- Jumlah yang dipinjam
+- Tanggal Pinjam
+- Tanggal Kembali
+- Status: Dipinjam (kuning) / Dikembalikan (hijau)
+
+**Tabel Riwayat Pengambilan Material:**
+- Nama Material
+- Nama Tim pengambil
+- Jumlah yang diambil
+- Tanggal Ambil
+- Tanggal Kembali
+- Status: Diambil (merah) / Dikembalikan (hijau) / Dipakai (oranye)
+
+#### Cara Kerja Filter Tanggal
+
+Filter berdasarkan **tanggal peminjaman/pengambilan**:
+- Jika pilih tanggal 12 Jan 2026, akan tampil semua item yang **dipinjam/diambil** pada tanggal tersebut
+- Bukan berdasarkan tanggal pengembalian
+- Default (tanpa filter): menampilkan **semua riwayat** dari semua tanggal
+
+#### Informasi Penting
+- Counter aktivitas menunjukkan total transaksi pada tanggal yang dipilih
+- Kedua tabel (Alat dan Material) ditampilkan secara terpisah
+- Tabel otomatis sejajar dengan column width yang konsisten
+- Filter tidak menggeser tabel ke bawah (floating popup)
+
+---
+
 ## Workflow Peminjaman
 
 ### Alur Peminjaman Alat

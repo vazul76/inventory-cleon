@@ -14,7 +14,7 @@
                 <div class="flex items-center gap-3">
                     <span id="selected-count" class="text-gray-600">0 material dipilih</span>
                     <button id="btn-kembalikan-multiple"
-                        class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
                         disabled>
                         Kembalikan Material
                     </button>
@@ -32,7 +32,7 @@
                         </span>
                         <input type="search" name="q" value="{{ isset($q) ? $q : request('q') }}"
                             placeholder="Cari material/pengambil..."
-                            class="h-10 w-full pl-10 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                            class="h-10 w-full pl-10 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                     </div>
                 </form>
             </div>
@@ -43,7 +43,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left">
-                                <input type="checkbox" id="select-all" class="w-4 h-4 text-green-600 rounded">
+                                <input type="checkbox" id="select-all" class="w-4 h-4 text-blue-600 rounded">
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Material</th>
@@ -63,7 +63,7 @@
                         @foreach ($pengambilan as $item)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4">
-                                    <input type="checkbox" class="select-pengambilan w-4 h-4 text-green-600 rounded"
+                                    <input type="checkbox" class="select-pengambilan w-4 h-4 text-blue-600 rounded"
                                         value="{{ $item->id }}" data-material="{{ $item->material->name }}"
                                         data-jumlah="{{ $item->jumlah }}">
                                 </td>
@@ -72,8 +72,8 @@
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <span
-                                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
-                                        {{ $item->jumlah }} unit
+                                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        {{ $item->jumlah }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
@@ -87,7 +87,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <button type="button"
-                                        class="btn-kembalikan-single bg-green-600 hover:bg-green-700 text-white text-sm font-semibold py-1 px-4 rounded"
+                                        class="btn-kembalikan-single bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-1 px-4 rounded"
                                         data-id="{{ $item->id }}" data-material="{{ $item->material->name }}"
                                         data-jumlah="{{ $item->jumlah }}">
                                         Kembalikan
@@ -165,7 +165,7 @@
                         Batal
                     </button>
                     <button type="submit" id="submit-button"
-                        class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed">
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded disabled:bg-gray-400 disabled:cursor-not-allowed">
                         Konfirmasi Pengembalian
                     </button>
                 </div>
@@ -253,13 +253,13 @@
                     div.innerHTML = `
                 <div class="flex-1">
                     <span class="font-medium text-gray-900">${item.material}</span>
-                    <div class="text-xs text-gray-500 mt-1">Jumlah diambil: ${item.jumlah} unit</div>
+                    <div class="text-xs text-gray-500 mt-1">Jumlah diambil: ${item.jumlah}</div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="flex items-center">
                         <label class="text-xs text-gray-600 mr-2">Jumlah kembali:</label>
                         <input type="number" 
-                            class="jumlah-kembali w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-green-500" 
+                            class="jumlah-kembali w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
                             data-id="${item.id}"
                             data-max="${item.jumlah}"
                             data-material="${item.material}"
@@ -267,7 +267,7 @@
                             min="1"
                             required>
                     </div>
-                    <span class="text-xs text-gray-500">unit</span>
+                    <span class="text-xs text-gray-500"></span>
                 </div>
             `;
                     selectedList.appendChild(div);
@@ -321,7 +321,7 @@
                     
                     let warningHtml = '<ul class="list-disc list-inside space-y-1">';
                     excessItems.forEach(item => {
-                        warningHtml += `<li><strong>${item.material}</strong>: Diambil ${item.diambil} unit, akan dikembalikan ${item.kembali} unit (kelebihan ${item.excess} unit)</li>`;
+                        warningHtml += `<li><strong>${item.material}</strong>: Diambil ${item.diambil}, akan dikembalikan ${item.kembali} (kelebihan ${item.excess})</li>`;
                     });
                     warningHtml += '</ul>';
                     warningMessage.innerHTML = warningHtml;

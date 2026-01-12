@@ -26,3 +26,6 @@ Route::post('/pengembalian-material-multiple', [PeminjamController::class, 'kemb
 
 // Riwayat
 Route::get('/riwayat', [PeminjamController::class, 'riwayat'])->name('peminjam.riwayat');
+
+// Riwayat Aktivitas (All Teams)
+Route::get('/riwayat-aktivitas', [PeminjamController::class, 'riwayatAktivitas'])->name('peminjam.riwayat-aktivitas');
