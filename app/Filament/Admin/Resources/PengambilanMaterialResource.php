@@ -55,14 +55,14 @@ class PengambilanMaterialResource extends Resource
                 Tables\Columns\TextColumn::make('material.name')
                     ->label('Material')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nama_pengambil')
-                    ->label('Pengambil')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('jumlah')
                     ->label('Jumlah')
                     ->alignCenter()
                     ->badge()
                     ->color('blue'),
+                Tables\Columns\TextColumn::make('nama_pengambil')
+                    ->label('Pengambil')
+                    ->searchable(),                
                 Tables\Columns\TextColumn::make('tanggal_ambil')
                     ->label('Tanggal Ambil')
                     ->dateTime('d M Y H:i')
@@ -72,14 +72,29 @@ class PengambilanMaterialResource extends Resource
                     ->dateTime('d M Y H:i')
                     ->sortable()
                     ->placeholder('-')
-                    ->toggleable(),
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('keperluan')
+                    ->label('Keperluan')
+                    ->limit(80)
+                    ->wrap(),
             ])
             ->defaultSort('tanggal_ambil', 'desc')
-            ->filters([])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'diambil' => 'Diambil',
+                        'dikembalikan' => 'Dikembalikan',
+                    ]),
+                Tables\Filters\Filter::make('tanggal_ambil')
+                    ->label('Tanggal Ambil')
+                    ->form([
+                        Forms\Components\DatePicker::make('tanggal'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        if (!empty($data['tanggal'])) {
+                            $query->whereDate('tanggal_ambil', $data['tanggal']);
+                        }
+                    }),
             ]);
     }
 
@@ -87,8 +102,6 @@ class PengambilanMaterialResource extends Resource
     {
         return [
             'index' => Pages\ListPengambilanMaterials::route('/'),
-            'create' => Pages\CreatePengambilanMaterial::route('/create'),
-            'edit' => Pages\EditPengambilanMaterial::route('/{record}/edit'),
         ];
     }
 }

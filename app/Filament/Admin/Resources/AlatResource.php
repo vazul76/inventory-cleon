@@ -46,15 +46,9 @@ class AlatResource extends Resource
                             ->minValue(0)
                             ->helperText('Jumlah alat yang tersedia'),
                         
-                        Forms\Components\Select::make('status')
+                        Forms\Components\Placeholder::make('status')
                             ->label('Status')
-                            ->options([
-                                'available' => 'Tersedia',
-                                'borrowed' => 'Dipinjam Semua',
-                                'maintenance' => 'Maintenance',
-                            ])
-                            ->default('available')
-                            ->required(),
+                            ->content(fn (Forms\Get $get) => ($get('available') ?? 0) > 0 ? 'Tersedia' : 'Tidak Tersedia')                            
                     ])->columns(2),
 
                 Forms\Components\Section::make('Detail')
@@ -90,30 +84,35 @@ class AlatResource extends Resource
                 
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
+                    ->state(fn (Alat $record) => $record->available > 0 ? 'available' : 'unavailable')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'available' => 'success',
-                        'borrowed' => 'warning',
-                        'maintenance' => 'danger',
+                        'unavailable' => 'danger',
+                        default => 'secondary',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'available' => 'Tersedia',
-                        'borrowed' => 'Dipinjam Semua',
-                        'maintenance' => 'Maintenance',
+                        'unavailable' => 'Tidak Tersedia',
                         default => $state,
                     }),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
                     ->options([
                         'available' => 'Tersedia',
-                        'borrowed' => 'Dipinjam Semua',
-                        'maintenance' => 'Maintenance',
+                        'unavailable' => 'Tidak Tersedia',
                     ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+            ]) 
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 

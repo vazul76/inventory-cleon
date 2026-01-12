@@ -103,18 +103,10 @@ class PeminjamanAlatResource extends Resource
                     ->label('Tgl Kembali')
                     ->dateTime('d M Y H:i')
                     ->placeholder('-'),
-                Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'dipinjam' => 'warning',
-                        'dikembalikan' => 'success',
-                    })
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'dipinjam' => 'Dipinjam',
-                        'dikembalikan' => 'Dikembalikan',
-                        default => $state,
-                    }),
+                Tables\Columns\TextColumn::make('keterangan')
+                    ->label('Keterangan')
+                    ->limit(80)
+                    ->wrap(),
             ])
             ->defaultSort('tanggal_pinjam', 'desc')
             ->filters([
@@ -123,24 +115,16 @@ class PeminjamanAlatResource extends Resource
                         'dipinjam' => 'Dipinjam',
                         'dikembalikan' => 'Dikembalikan',
                     ]),
-            ])
-            ->actions([
-                Tables\Actions\Action::make('kembalikan')
-                    ->label('Kembalikan')
-                    ->icon('heroicon-o-arrow-uturn-left')
-                    ->color('success')
-                    ->visible(fn (PeminjamanAlat $record) => $record->status === 'dipinjam')
-                    ->requiresConfirmation()
-                    ->action(function (PeminjamanAlat $record) {
-                        $record->update([
-                            'status' => 'dikembalikan',
-                            'tanggal_kembali' => now(),
-                        ]);
-                        
-                        $record->alat->tambahAvailable($record->jumlah);
+                Tables\Filters\Filter::make('tanggal_pinjam')
+                    ->label('Tanggal Pinjam')
+                    ->form([
+                        Forms\Components\DatePicker::make('tanggal'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        if (!empty($data['tanggal'])) {
+                            $query->whereDate('tanggal_pinjam', $data['tanggal']);
+                        }
                     }),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ]);
     }
 
@@ -153,8 +137,6 @@ class PeminjamanAlatResource extends Resource
     {
         return [
             'index' => Pages\ListPeminjamanAlats::route('/'),
-            'create' => Pages\CreatePeminjamanAlat::route('/create'),
-            'edit' => Pages\EditPeminjamanAlat::route('/{record}/edit'),
         ];
     }
 }

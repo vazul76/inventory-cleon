@@ -24,27 +24,43 @@ class MaterialResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label('Nama Material')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('category_id')
-                    ->label('Kategori')
-                    ->relationship('category', 'name', fn($query) => $query->where('name', 'Material'))
-                    ->default(fn() => \App\Models\Category::where('name', 'Material')->first()?->id)
-                    ->required()
-                    ->disabled()
-                    ->dehydrated(),
-                Forms\Components\Textarea::make('description')
-                    ->label('Deskripsi')
-                    ->rows(3)
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('stock')
-                    ->label('Stok')
-                    ->required()
-                    ->numeric()
-                    ->default(0)
-                    ->minValue(0),
+                Forms\Components\Section::make('Informasi Material')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Nama Material')
+                            ->required()
+                            ->maxLength(255),
+
+                        Forms\Components\Select::make('category_id')
+                            ->label('Kategori')
+                            ->relationship('category', 'name', fn($query) => $query->where('name', 'Material'))
+                            ->default(fn() => \App\Models\Category::where('name', 'Material')->first()?->id)
+                            ->required()
+                            ->disabled()
+                            ->dehydrated(),
+
+                        Forms\Components\TextInput::make('stock')
+                            ->label('Stok')
+                            ->required()
+                            ->numeric()
+                            ->default(0)
+                            ->minValue(0)
+                            ->helperText('Jumlah stok yang tersedia')
+                            ->reactive(),
+
+                        Forms\Components\Placeholder::make('status')
+                            ->label('Status')
+                            ->content(fn (Forms\Get $get) => ($get('stock') ?? 0) > 0 ? 'Tersedia' : 'Tidak Tersedia'),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Detail')
+                    ->schema([
+                        Forms\Components\Textarea::make('description')
+                            ->label('Deskripsi')
+                            ->rows(4)
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 
@@ -68,10 +84,32 @@ class MaterialResource extends Resource
                         $state <= 5 => 'warning',
                         default => 'success',
                     }),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->state(fn (Material $record) => $record->stock > 0 ? 'available' : 'unavailable')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'available' => 'success',
+                        'unavailable' => 'danger',
+                        default => 'secondary',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'available' => 'Tersedia',
+                        'unavailable' => 'Tidak Tersedia',
+                        default => $state,
+                    }),
             ])
-            ->filters([])
+            ->filters([
+                 Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'available' => 'Tersedia',
+                        'unavailable' => 'Tidak Tersedia',
+                    ]),
+            ])git
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
